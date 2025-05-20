@@ -1,0 +1,94 @@
+{
+	"$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+	"linter": {
+		"enabled": true,
+		"rules": {
+			"recommended": true,
+			"a11y": {
+				"noSvgWithoutTitle": "off",
+				"useGenericFontNames": "warn",
+				"useButtonType": "warn",
+				"useKeyWithClickEvents": "warn",
+				"useKeyWithMouseEvents": "warn",
+				"useMediaCaption": "warn",
+				"noNoninteractiveTabindex": "warn",
+				"useSemanticElements": "warn",
+				"useFocusableInteractive": "warn"
+			},
+			"correctness": {
+				"noUnusedVariables": "warn",
+				"useExhaustiveDependencies": "warn",
+				"noSwitchDeclarations": "warn",
+				"noUnsafeOptionalChaining": "warn",
+				"noUnusedImports": "warn",
+				"noUnknownMediaFeatureName": "off"
+			},
+			"nursery": {
+				"useSortedClasses": {
+					"level": "warn",
+					"fix": "safe",
+					"options": {
+						"attributes": ["classList"],
+						"functions": ["clsx", "cva", "tw"]
+					}
+				}
+			},
+			"style": {
+				"useImportType": "warn",
+				"useSelfClosingElements": "off",
+				"noUnusedTemplateLiteral": "off",
+				"noNonNullAssertion": "warn",
+				"noUselessElse": "off",
+				"useTemplate": "warn",
+				"useShorthandFunctionType": "warn",
+				"useExponentiationOperator": "warn",
+				"noParameterAssign": "warn",
+				"noArguments": "warn",
+				"noCommaOperator": "warn"
+			},
+			"suspicious": {
+				"noExplicitAny": "warn",
+				"noAssignInExpressions": "warn",
+				"noArrayIndexKey": "warn",
+				"noAsyncPromiseExecutor": "off",
+				"noDuplicateFontNames": "warn",
+				"noFallthroughSwitchClause": "warn",
+				"noControlCharactersInRegex": "warn",
+				"noShadowRestrictedNames": "warn",
+				"noShorthandPropertyOverrides": "off"
+			},
+			"complexity": {
+				"noForEach": "off",
+				"noStaticOnlyClass": "off",
+				"noBannedTypes": "warn",
+				"noUselessFragments": "warn",
+				"noUselessSwitchCase": "warn",
+				"useLiteralKeys": "off"
+			},
+			"security": {
+				"noDangerouslySetInnerHtml": "warn",
+				"noGlobalEval": "warn"
+			},
+			"performance": {
+				"noAccumulatingSpread": "warn"
+			}
+		},
+		"ignore": ["node_modules", "dist", ".wxt"]
+	},
+	"formatter": {
+		"indentStyle": "space",
+		"indentWidth": 2,
+		"enabled": true,
+		"lineWidth": 80,
+		"ignore": ["node_modules", "dist", ".wxt"]
+	},
+	"javascript": {
+		"formatter": {
+			"semicolons": "asNeeded"
+		}
+	},
+	"organizeImports": {
+		"enabled": true,
+		"ignore": ["node_modules", "dist", ".wxt"]
+	}
+}
