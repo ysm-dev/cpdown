@@ -1,7 +1,7 @@
 {
   "name": "cpdown",
   "description": "Copy any webpage as markdown",
-  "version": "0.0.0",
+  "version": "0.0.3",
   "type": "module",
   "scripts": {
     "dev": "wxt",
@@ -17,12 +17,29 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
+    "@tailwindcss/vite": "^4.1.7",
+    "@types/react": "^19.1.5",
+    "@types/react-dom": "^19.1.5",
     "@types/turndown": "^5.0.5",
+    "@wxt-dev/module-react": "^1.1.3",
+    "shadcn": "^2.5.0",
+    "tailwindcss": "^4.1.7",
     "taze": "^19.1.0",
     "typescript": "^5.8.3",
+    "vite-tsconfig-paths": "^5.1.4",
     "wxt": "^0.20.6"
   },
   "dependencies": {
-    "turndown": "^7.2.0"
+    "@mozilla/readability": "^0.6.0",
+    "@radix-ui/react-switch": "^1.2.5",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "js-tiktoken": "^1.0.20",
+    "lucide-react": "^0.511.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "tailwind-merge": "^3.3.0",
+    "turndown": "^7.2.0",
+    "tw-animate-css": "^1.3.0"
   }
 }
