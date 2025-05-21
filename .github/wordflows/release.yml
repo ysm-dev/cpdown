@@ -1,0 +1,60 @@
+name: Release Extension
+
+on:
+  workflow_dispatch:
+
+  push:
+    branches:
+      - main
+
+jobs:
+  check_version:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    outputs:
+      version_changed: ${{ steps.check_version.outputs.version_changed }}
+      version: ${{ steps.check_version.outputs.version }}
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@main
+        with:
+          fetch-depth: 2
+
+      - name: Check if version changed
+        id: check_version
+        run: |
+          PREV_VERSION=$(git show HEAD^:package.json | jq -r '.version')
+          CURR_VERSION=$(cat package.json | jq -r '.version')
+          if [ "$PREV_VERSION" != "$CURR_VERSION" ]; then
+            echo "version_changed=true" >> $GITHUB_OUTPUT
+            echo "version=$CURR_VERSION" >> $GITHUB_OUTPUT
+            echo "Version changed from $PREV_VERSION to $CURR_VERSION"
+          else
+            echo "version_changed=false" >> $GITHUB_OUTPUT
+            echo "Version unchanged: $CURR_VERSION"
+          fi
+
+  deploy:
+    needs: check_version
+    if: needs.check_version.outputs.version_changed == 'true'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@main
+
+      - uses: oven-sh/setup-bun@main
+
+      - run: bun i -g @antfu/ni
+      - run: ni --ignore-scripts
+
+      - name: Build and submit extension
+        run: |
+          nr build
+          nr submit
+        env:
+          CHROME_EXTENSION_ID: ${{ secrets.CHROME_EXTENSION_ID }}
+          CHROME_CLIENT_ID: ${{ secrets.CHROME_CLIENT_ID }}
+          CHROME_CLIENT_SECRET: ${{ secrets.CHROME_CLIENT_SECRET }}
+          CHROME_REFRESH_TOKEN: ${{ secrets.CHROME_REFRESH_TOKEN }}
