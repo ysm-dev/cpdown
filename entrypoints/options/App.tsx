@@ -74,7 +74,9 @@ export const App = () => {
       </div>
 
       <footer className="mt-8 text-center text-muted-foreground text-xs">
-        <p>CPDown v{packageJson.version} — Copy any webpage as markdown</p>
+        <p>
+          cpdown v{packageJson.version} — Copy any webpage as clean markdown
+        </p>
       </footer>
     </div>
   )

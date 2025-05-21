@@ -5,16 +5,16 @@ import { defineConfig } from "wxt"
 export default defineConfig({
   modules: ["@wxt-dev/module-react"],
   manifest: {
-    name: "CPDown",
+    name: "cpdown",
     action: {},
-    description: "Copy any webpage as markdown",
+    description: "Copy any webpage as clean markdown",
     commands: {
       "copy-as-markdown": {
         suggested_key: {
           default: "Ctrl+Shift+T",
           mac: "Command+Ctrl+T",
         },
-        description: "Copy current page as markdown",
+        description: "Copy current page as clean markdown",
       },
     },
     permissions: ["activeTab", "clipboardWrite", "scripting", "storage"],

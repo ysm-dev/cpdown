@@ -1,6 +1,6 @@
 {
   "name": "cpdown",
-  "description": "Copy any webpage as markdown",
+  "description": "Copy any webpage as clean markdown",
   "version": "0.0.3",
   "type": "module",
   "scripts": {
