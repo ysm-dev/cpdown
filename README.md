@@ -1,7 +1,7 @@
 # cpdown
 
 <div align="center">
-  <img src="./public/icon/icon-128.png" alt="cpdown logo" width="100" height="100" />
+  <img src="./public/icon/128.png" alt="cpdown logo" width="100" height="100" />
   <p><em>Copy any webpage as clean markdown.</em></p>
 </div>
 
