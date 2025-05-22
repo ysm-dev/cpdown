@@ -3,6 +3,7 @@ import tsconfigPaths from "vite-tsconfig-paths"
 import { defineConfig } from "wxt"
 
 export default defineConfig({
+  manifestVersion: 3,
   modules: ["@wxt-dev/module-react"],
   manifest: {
     name: "cpdown",

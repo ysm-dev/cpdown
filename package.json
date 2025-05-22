@@ -1,11 +1,11 @@
 {
   "name": "cpdown",
   "description": "Copy any webpage as clean markdown",
-  "version": "0.0.3",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "wxt",
-    "dev:firefox": "wxt -b firefox",
+    "dev:firefox": "wxt -b firefox --mv2",
     "build": "wxt build",
     "build:firefox": "wxt build -b firefox",
     "zip": "wxt zip",
