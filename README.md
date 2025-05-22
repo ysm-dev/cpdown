@@ -10,16 +10,7 @@
 cpdown is a browser extension that allows you to copy the content of any webpage as clean, formatted markdown. It uses Mozilla's Readability (the same technology behind Firefox's Reader View) to extract the main content from a webpage, removing clutter like ads, navigation, and sidebars.
 
 <div align="center">
-  <!-- 
-  To make this video work on GitHub:
-  1. Create a new issue or discussion in your repository
-  2. Drag and drop video/record.mp4 into the comment box
-  3. Wait for it to upload, then copy the generated URL
-  4. Replace the URL below with the one GitHub gives you
-  5. Delete these instructions
-  -->
-  
-  ![Demo Video](https://github.com/ysm-dev/cpdown/raw/refs/heads/main/video/record.mp4)
+  ![Demo Video](https://github.com/user-attachments/assets/ce1e748a-86f3-4e5d-8613-f0856ad5c259)
 </div>
 
 ## Features
