@@ -9,7 +9,6 @@ on:
 
 jobs:
   check_version:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     outputs:
       version_changed: ${{ steps.check_version.outputs.version_changed }}
