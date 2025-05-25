@@ -51,6 +51,7 @@ jobs:
       - name: Build and submit extension
         run: |
           nr build
+          nr zip
           nr submit
         env:
           CHROME_EXTENSION_ID: knnaflplggjdedobhbidojmmnocfbopf
