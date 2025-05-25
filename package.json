@@ -34,6 +34,7 @@
     "@radix-ui/react-switch": "^1.2.5",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "defuddle": "^0.6.4",
     "js-tiktoken": "^1.0.20",
     "lucide-react": "^0.511.0",
     "react": "^19.1.0",

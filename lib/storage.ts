@@ -1,13 +1,15 @@
 import { browser } from "wxt/browser"
 
 export type OptionsState = {
+  useDeffudle: boolean
   useReadability: boolean
   showSuccessToast: boolean
   showConfetti: boolean
 }
 
 export const defaultOptions: OptionsState = {
-  useReadability: true,
+  useDeffudle: true,
+  useReadability: false,
   showSuccessToast: true,
   showConfetti: false,
 }

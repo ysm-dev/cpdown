@@ -23,9 +23,16 @@ export const App = () => {
   ) => {
     if (!options) return
 
-    const newOptions = { ...options, [key]: value }
+    let newOptions = { ...options, [key]: value }
+
+    if (key === "useReadability" && value) {
+      newOptions = { ...newOptions, useDeffudle: false }
+    } else if (key === "useDeffudle" && value) {
+      newOptions = { ...newOptions, useReadability: false }
+    }
+
     setOptions(newOptions)
-    await saveOptions({ [key]: value })
+    await saveOptions(newOptions)
   }
 
   return (
@@ -37,6 +44,18 @@ export const App = () => {
       <div className="flex-1 space-y-1 rounded-lg border border-border bg-card p-6 shadow-sm">
         {options && (
           <>
+            <ToggleOption
+              title="Use Deffudle"
+              description="Process content using Deffudle for an alternative parsing method."
+              checked={options.useDeffudle}
+              onCheckedChange={(checked) =>
+                handleOptionChange("useDeffudle", checked)
+              }
+              infoLink="https://github.com/kepano/defuddle"
+            />
+
+            <div className="border-border border-t"></div>
+
             <ToggleOption
               title="Use Mozilla Readability"
               description="Parse webpage content using Readability for cleaner markdown output"

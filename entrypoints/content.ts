@@ -2,6 +2,7 @@ import { showNotification } from "@/lib/showNotification"
 import { getOptions } from "@/lib/storage"
 import { defaultTagsToRemove } from "@/lib/tagsToRemove"
 import { Readability } from "@mozilla/readability"
+import Defuddle from "defuddle"
 import { Tiktoken } from "js-tiktoken/lite"
 import o200k_base from "js-tiktoken/ranks/o200k_base"
 import Turndown from "turndown"
@@ -14,7 +15,8 @@ export default defineContentScript({
       if (msg.type === "COPY_TEXT") {
         const options = await getOptions()
 
-        const { useReadability, showSuccessToast, showConfetti } = options
+        const { useReadability, showSuccessToast, showConfetti, useDeffudle } =
+          options
 
         const html = msg.payload
 
@@ -31,6 +33,31 @@ export default defineContentScript({
           markdown = new Turndown({})
             .remove(defaultTagsToRemove)
             .turndown(article.content)
+        } else if (useDeffudle) {
+          try {
+            // Create a new DOM from the HTML string
+            const doc = new DOMParser().parseFromString(html, "text/html")
+            const defuddle = new Defuddle(doc, {
+              debug: true,
+              markdown: true,
+              separateMarkdown: false,
+            }).parse()
+
+            markdown = new Turndown({})
+              .remove(defaultTagsToRemove)
+              .turndown(defuddle.content)
+          } catch (error) {
+            console.error("Error processing with Defuddle:", error)
+            // Fallback to basic Turndown if Defuddle fails
+            markdown = new Turndown({})
+              .remove(defaultTagsToRemove)
+              .turndown(html)
+            sendResponse({
+              success: false,
+              error: "Defuddle processing failed",
+            })
+            return // Prevent further execution in case of Defuddle error
+          }
         } else {
           markdown = new Turndown({})
             //
