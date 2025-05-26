@@ -17,16 +17,16 @@ export const ToggleOption: React.FC<ToggleOptionProps> = ({
   infoLink,
 }) => {
   return (
-    <div className="flex items-start justify-between py-4">
-      <div className="space-y-1">
+    <div className="flex items-start justify-between gap-4 py-3">
+      <div className="space-y-2">
         <div className="flex items-center gap-2">
-          <h3 className="font-medium text-base leading-none">{title}</h3>
+          <h3 className="font-medium text-sm leading-none">{title}</h3>
           {infoLink && (
             <a
               href={infoLink}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-sm hover:underline"
+              className="text-xs hover:underline"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -38,7 +38,7 @@ export const ToggleOption: React.FC<ToggleOptionProps> = ({
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                className="inline-block"
+                className="size-3.5"
               >
                 <circle cx="12" cy="12" r="10" />
                 <path d="M12 16v-4" />
@@ -48,7 +48,9 @@ export const ToggleOption: React.FC<ToggleOptionProps> = ({
           )}
         </div>
         {description && (
-          <p className="text-muted-foreground text-xs">{description}</p>
+          <p className="text-pretty text-muted-foreground text-xs">
+            {description}
+          </p>
         )}
       </div>
       <Switch checked={checked} onCheckedChange={onCheckedChange} />

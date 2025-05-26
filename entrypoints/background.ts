@@ -14,16 +14,10 @@ export default defineBackground(() => {
   async function copyCurrentPageAsMarkdown() {
     try {
       // Get the current active tab
-      const tabs = await browser.tabs.query({
+      const [activeTab] = await browser.tabs.query({
         active: true,
         currentWindow: true,
       })
-      if (!tabs || tabs.length === 0) {
-        console.error("No active tab found")
-        return
-      }
-
-      const activeTab = tabs[0]
 
       if (!activeTab.id) {
         console.error("Active tab has no ID")

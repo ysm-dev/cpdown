@@ -1,30 +1,42 @@
-import { showNotification } from "@/lib/showNotification"
+import { Noti, getRoot, showNotification } from "@/lib/showNotification"
 import { getOptions } from "@/lib/storage"
 import { defaultTagsToRemove } from "@/lib/tagsToRemove"
 import { Readability } from "@mozilla/readability"
 import Defuddle from "defuddle"
 import { Tiktoken } from "js-tiktoken/lite"
 import o200k_base from "js-tiktoken/ranks/o200k_base"
+import { createRoot } from "react-dom/client"
 import Turndown from "turndown"
 import { browser } from "wxt/browser"
+
+const tiktoken = new Tiktoken(o200k_base)
 
 export default defineContentScript({
   matches: ["*://*/*"],
   main() {
+    createRoot(getRoot()).render(<Noti />)
+
     browser.runtime.onMessage.addListener(async (msg, sender, sendResponse) => {
       if (msg.type === "COPY_TEXT") {
         const options = await getOptions()
 
-        const { useReadability, showSuccessToast, showConfetti, useDeffudle } =
-          options
+        const {
+          useReadability,
+          showSuccessToast,
+          showConfetti,
+          useDeffudle,
+          wrapInTripleBackticks,
+        } = options
 
         const html = msg.payload
 
         let markdown = html
 
         if (useReadability) {
-          const document = new DOMParser().parseFromString(html, "text/html")
-          const article = new Readability(document).parse()
+          const doc = new DOMParser().parseFromString(html, "text/html")
+          doc.getElementById("cpdown-notification")?.remove()
+
+          const article = new Readability(doc).parse()
 
           if (!article?.content) {
             return sendResponse({ success: false, error: "No article found" })
@@ -35,8 +47,8 @@ export default defineContentScript({
             .turndown(article.content)
         } else if (useDeffudle) {
           try {
-            // Create a new DOM from the HTML string
             const doc = new DOMParser().parseFromString(html, "text/html")
+            doc.getElementById("cpdown-notification")?.remove()
             const defuddle = new Defuddle(doc, {
               debug: true,
               markdown: true,
@@ -65,12 +77,15 @@ export default defineContentScript({
             .turndown(html)
         }
 
-        const tokens = new Tiktoken(o200k_base).encode(markdown)
+        if (wrapInTripleBackticks) {
+          markdown = `\`\`\`md\n${markdown}\n\`\`\``
+        }
 
-        navigator.clipboard.writeText(markdown).then(
-          () => sendResponse({ success: true }),
-          (err) => sendResponse({ success: false, error: err.message }),
-        )
+        const tokens = tiktoken.encode(markdown)
+
+        await navigator.clipboard.writeText(markdown)
+
+        sendResponse({ success: true })
 
         if (showSuccessToast) {
           showNotification(`Copied as markdown (${tokens.length} tokens)`)

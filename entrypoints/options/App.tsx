@@ -36,12 +36,12 @@ export const App = () => {
   }
 
   return (
-    <div className="mx-auto flex min-h-screen max-w-xl flex-col bg-background p-6 text-foreground">
-      <header className="mb-8">
-        <h1 className="mb-2 font-bold text-2xl">Settings</h1>
+    <div className="mx-auto flex min-h-screen max-w-xl flex-col bg-background p-4 text-foreground">
+      <header className="mb-4">
+        <h1 className="font-bold text-xl">Settings</h1>
       </header>
 
-      <div className="flex-1 space-y-1 rounded-lg border border-border bg-card p-6 shadow-sm">
+      <div className="space-y-1 rounded-lg border border-border bg-card p-6">
         {options && (
           <>
             <ToggleOption
@@ -64,6 +64,18 @@ export const App = () => {
                 handleOptionChange("useReadability", checked)
               }
               infoLink="https://github.com/mozilla/readability"
+            />
+
+            <div className="border-border border-t"></div>
+
+            {/* wrap in triple backticks */}
+            <ToggleOption
+              title="Wrap in triple backticks"
+              description="Wrap the copied markdown in triple backticks"
+              checked={options.wrapInTripleBackticks}
+              onCheckedChange={(checked) =>
+                handleOptionChange("wrapInTripleBackticks", checked)
+              }
             />
 
             <div className="border-border border-t"></div>
@@ -92,7 +104,7 @@ export const App = () => {
         )}
       </div>
 
-      <footer className="mt-8 text-center text-muted-foreground text-xs">
+      <footer className="mt-4 text-center text-muted-foreground text-xs">
         <p>
           cpdown v{packageJson.version} — Copy any webpage as clean markdown
         </p>
