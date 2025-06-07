@@ -1,6 +1,9 @@
 import { Noti, getRoot, showNotification } from "@/lib/showNotification"
 import { getOptions } from "@/lib/storage"
 import { defaultTagsToRemove } from "@/lib/tagsToRemove"
+import { convertSrtToText } from "@/lib/yt/convertSrtToText"
+import { getVideoInfo } from "@/lib/yt/getVideoInfo"
+import { getVideoSubtitle } from "@/lib/yt/getVideoSubtitle"
 import { Readability } from "@mozilla/readability"
 import Defuddle from "defuddle"
 import { Tiktoken } from "js-tiktoken/lite"
@@ -89,6 +92,44 @@ export default defineContentScript({
 
         if (showSuccessToast) {
           showNotification(`Copied as markdown (${tokens.length} tokens)`)
+        }
+
+        if (showConfetti) {
+          location.href = `raycast://confetti`
+        }
+
+        return true
+      }
+
+      if (msg.type === "COPY_YOUTUBE_SUBTITLE") {
+        const options = await getOptions()
+
+        const { showSuccessToast, showConfetti } = options
+
+        const videoId = msg.payload
+
+        const videoInfo = await getVideoInfo(videoId)
+
+        const title = videoInfo.videoDetails.title
+
+        const subtitle = await getVideoSubtitle(videoId)
+
+        if (!subtitle) {
+          throw new Error("No subtitle found")
+        }
+
+        const text = await convertSrtToText(videoId, subtitle)
+
+        await navigator.clipboard.writeText(`Title: ${title}\n\n${text}`)
+
+        sendResponse({ success: true })
+
+        const tokens = tiktoken.encode(text)
+
+        if (showSuccessToast) {
+          showNotification(
+            `Subtitle copied to clipboard (${tokens.length} tokens)`,
+          )
         }
 
         if (showConfetti) {

@@ -4,6 +4,7 @@
     "": {
       "name": "cpdown",
       "dependencies": {
+        "@fxts/core": "^1.11.0",
         "@mozilla/readability": "^0.6.0",
         "@radix-ui/react-switch": "^1.2.5",
         "class-variance-authority": "^0.7.1",
@@ -11,9 +12,11 @@
         "defuddle": "^0.6.4",
         "js-tiktoken": "^1.0.20",
         "lucide-react": "^0.511.0",
+        "ofetch": "^1.4.1",
         "react": "^19.1.0",
         "react-dom": "^19.1.0",
         "sonner": "^2.0.4",
+        "srt-parser-2": "^1.2.3",
         "tailwind-merge": "^3.3.0",
         "turndown": "^7.2.0",
         "tw-animate-css": "^1.3.3",
@@ -188,6 +191,8 @@
     "@esbuild/win32-ia32": ["@esbuild/win32-ia32@0.25.4", "", { "os": "win32", "cpu": "ia32" }, "sha512-i1sW+1i+oWvQzSgfRcxxG2k4I9n3O9NRqy8U+uugaT2Dy7kLO9Y7wI72haOahxceMX8hZAzgGou1FhndRldxRg=="],
 
     "@esbuild/win32-x64": ["@esbuild/win32-x64@0.25.4", "", { "os": "win32", "cpu": "x64" }, "sha512-nOT2vZNw6hJ+z43oP1SPea/G/6AbN6X+bGNhNuq8NtRHy4wsMhw765IKLNmnjek7GvjWBYQ8Q5VBoYTFg9y1UQ=="],
+
+    "@fxts/core": ["@fxts/core@1.11.0", "", { "dependencies": { "tslib": "^2.6.0" } }, "sha512-nRJD/bris+Wc+7sX4mmvzIw9M44KnVZ3qpje4X1poGN/mSJKOGieWIju3/kaTJDrQKheQ0Asmvq+QmGyT6UbaQ=="],
 
     "@inquirer/confirm": ["@inquirer/confirm@5.1.10", "", { "dependencies": { "@inquirer/core": "^10.1.11", "@inquirer/type": "^3.0.6" }, "peerDependencies": { "@types/node": ">=18" }, "optionalPeers": ["@types/node"] }, "sha512-FxbQ9giWxUWKUk2O5XZ6PduVnH2CZ/fmMKMBkH71MHJvWr7WL5AHKevhzF1L5uYWB2P548o1RzVxrNd3dpmk6g=="],
 
@@ -1230,6 +1235,8 @@
     "split": ["split@1.0.1", "", { "dependencies": { "through": "2" } }, "sha512-mTyOoPbrivtXnwnIxZRFYRrPNtEFKlpB2fvjSnCQUiAA6qAZzqwna5envK4uk6OIeP17CsdF3rSBGYVBsU0Tkg=="],
 
     "split2": ["split2@4.2.0", "", {}, "sha512-UcjcJOWknrNkF6PLX83qcHM6KHgVKNkV62Y8a5uYDVv9ydGQVwAHMKqHdJje1VTWpljG0WYpCDhrCdAOYH4TWg=="],
+
+    "srt-parser-2": ["srt-parser-2@1.2.3", "", { "bin": { "srt-parser-2": "bin/index.js" } }, "sha512-dANP1AyJTI503H0/kXwRza+7QxDB3BqeFvEKTF4MI9lQcBe8JbRUQTKVIGzGABJCwBovEYavZ2Qsdm/s8XKz8A=="],
 
     "statuses": ["statuses@2.0.1", "", {}, "sha512-RwNA9Z/7PrK06rYLIzFMlaF+l73iwpzsqRIFgbMLbTcLD6cOao82TaWefPXQvB2fOC4AjuYSEndS7N/mTCbkdQ=="],
 

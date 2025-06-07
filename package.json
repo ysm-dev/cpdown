@@ -31,6 +31,7 @@
     "wxt": "^0.20.6"
   },
   "dependencies": {
+    "@fxts/core": "^1.11.0",
     "@mozilla/readability": "^0.6.0",
     "@radix-ui/react-switch": "^1.2.5",
     "class-variance-authority": "^0.7.1",
@@ -38,9 +39,11 @@
     "defuddle": "^0.6.4",
     "js-tiktoken": "^1.0.20",
     "lucide-react": "^0.511.0",
+    "ofetch": "^1.4.1",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "sonner": "^2.0.4",
+    "srt-parser-2": "^1.2.3",
     "tailwind-merge": "^3.3.0",
     "turndown": "^7.2.0",
     "tw-animate-css": "^1.3.3"
