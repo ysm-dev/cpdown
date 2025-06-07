@@ -15,6 +15,7 @@ export const getVideoInfo = memoize(async (videoId: string) => {
         },
         videoId,
       },
+      credentials: "omit",
     },
   )
 

@@ -18,6 +18,7 @@ export const getVideoSubtitle = memoize(async (videoId: string) => {
 
   const srt = await ofetch<string>(`${origin}${pathname}?${searchParams}`, {
     parseResponse: (txt) => txt,
+    credentials: "omit",
   })
 
   return srt
