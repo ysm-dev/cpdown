@@ -20,7 +20,7 @@ https://github.com/user-attachments/assets/cedf05e8-ed1d-4e71-9769-66c9b292fbdd
 - 📖 Uses Defuddle or Mozilla's Readability to extract the main content
 - 🔍 Removes unnecessary HTML elements (scripts, styles, iframes, etc.)
 - 🔢 Shows token count for the copied content (for LLM)
-- ⌨️ Keyboard shortcut support (Cmd+Ctrl+T on Mac, Ctrl+Shift+T on Windows/Linux)
+- ⌨️ Keyboard shortcut support
 
 ## Installation
 

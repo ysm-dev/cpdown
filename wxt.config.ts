@@ -8,7 +8,7 @@ export default defineConfig({
   manifest: {
     name: "cpdown",
     action: {},
-    description: "Copy any webpage as clean markdown",
+    description: "Copy any webpage/YouTube subtitle as clean markdown",
     commands: {
       "copy-as-markdown": {
         suggested_key: {
