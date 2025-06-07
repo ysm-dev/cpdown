@@ -7,7 +7,7 @@
 
 ## Overview
 
-cpdown is a browser extension that allows you to copy the content of any webpage as clean, formatted markdown. It uses Mozilla's Readability (the same technology behind Firefox's Reader View) to extract the main content from a webpage, removing clutter like ads, navigation, and sidebars.
+cpdown is a browser extension that allows you to copy the content of any webpage as clean, formatted markdown. If you're on YouTube, you can also copy the subtitle as markdown.
 
 ### Demo
 
@@ -16,26 +16,26 @@ https://github.com/user-attachments/assets/cedf05e8-ed1d-4e71-9769-66c9b292fbdd
 ## Features
 
 - 📋 Copy any webpage content as clean markdown with one click (or keyboard shortcut)
-- 📖 Uses Mozilla's Readability to extract the main content
+- 📋 Copy YouTube subtitle as clean markdown with one click (or keyboard shortcut)
+- 📖 Uses Defuddle or Mozilla's Readability to extract the main content
 - 🔍 Removes unnecessary HTML elements (scripts, styles, iframes, etc.)
 - 🔢 Shows token count for the copied content (for LLM)
 - ⌨️ Keyboard shortcut support (Cmd+Ctrl+T on Mac, Ctrl+Shift+T on Windows/Linux)
 
 ## Installation
 
-### Chrome Web Store
-
-[Install cpdown from the Chrome Web Store](#) (Coming soon)
+- Chrome: [Chrome Web Store](https://chromewebstore.google.com/detail/cpdown/knnaflplggjdedobhbidojmmnocfbopf)
+- Firefox: [Firefox Add-ons](#) (Coming soon)
 
 ### Manual Installation
 
 1. Clone this repository
 2. Install dependencies:
-   ```bash
+   ```sh
    bun i
    ```
 3. Build the extension:
-   ```bash
+   ```sh
    bun run build
    ```
 4. Load the unpacked extension:
@@ -54,7 +54,9 @@ https://github.com/user-attachments/assets/cedf05e8-ed1d-4e71-9769-66c9b292fbdd
 
 cpdown offers several configuration options:
 
+- **Use Defuddle**: Use Defuddle to clean up the markdown output
 - **Use Mozilla Readability**: Parse webpage content using Readability for cleaner markdown output
+- **Wrap in Triple Backticks**: Wrap the copied content in triple backticks for better readability
 - **Show Success Toast**: Display a notification when content is successfully copied
 - **Show Raycast Confetti**: Celebrate successful copying with a confetti animation (for Raycast users)
 
@@ -62,12 +64,16 @@ cpdown offers several configuration options:
 
 This extension is built with:
 
+- [Cursor](https://www.cursor.com/) - For the vibe coding
 - [WXT](https://wxt.dev/) - The Web Extension Toolkit
 - [React](https://react.dev/) - For the options UI
+- [Shadcn UI](https://ui.shadcn.com/) - For the options UI
+- [Sonner](https://sonner.emilkowal.ski/) - For the toast notifications
 - [Tailwind CSS](https://tailwindcss.com/) - For styling
-- [Mozilla Readability](https://github.com/mozilla/readability) - For content extraction
+- [Defuddle](https://github.com/kepano/defuddle) - For main content extraction & markdown cleanup
+- [Mozilla Readability](https://github.com/mozilla/readability) - For main content extraction
 - [Turndown](https://github.com/mixmark-io/turndown) - For HTML to Markdown conversion
-- [js-tiktoken](https://github.com/dqbd/tiktoken) - For token counting
+- [tiktoken](https://github.com/dqbd/tiktoken) - For token counting
 
 ### Development Commands
 
@@ -78,9 +84,3 @@ bun run dev
 ## License
 
 [MIT](LICENSE)
-
-## Acknowledgements
-
-- [Mozilla Readability](https://github.com/mozilla/readability) for the content extraction algorithm
-- [Turndown](https://github.com/mixmark-io/turndown) for the HTML to Markdown conversion
-- [Raycast](https://www.raycast.com/) for the confetti animation integration

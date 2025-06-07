@@ -13,7 +13,7 @@ export default defineConfig({
       "copy-as-markdown": {
         suggested_key: {
           default: "Ctrl+Shift+T",
-          mac: "Command+Ctrl+T",
+          mac: "Ctrl+T",
         },
         description: "Copy current page as clean markdown",
       },

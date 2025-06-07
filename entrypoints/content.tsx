@@ -104,7 +104,8 @@ export default defineContentScript({
       if (msg.type === "COPY_YOUTUBE_SUBTITLE") {
         const options = await getOptions()
 
-        const { showSuccessToast, showConfetti } = options
+        const { showSuccessToast, showConfetti, wrapInTripleBackticks } =
+          options
 
         const videoId = msg.payload
 
@@ -118,13 +119,19 @@ export default defineContentScript({
           throw new Error("No subtitle found")
         }
 
-        const text = await convertSrtToText(videoId, subtitle)
+        let markdown = await convertSrtToText(videoId, subtitle)
 
-        await navigator.clipboard.writeText(`Title: ${title}\n\n${text}`)
+        markdown = `# ${title}\n\n${markdown}`
+
+        if (wrapInTripleBackticks) {
+          markdown = `\`\`\`md\n${markdown}\n\`\`\``
+        }
+
+        await navigator.clipboard.writeText(markdown)
 
         sendResponse({ success: true })
 
-        const tokens = tiktoken.encode(text)
+        const tokens = tiktoken.encode(markdown)
 
         if (showSuccessToast) {
           showNotification(
