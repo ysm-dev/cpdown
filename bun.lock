@@ -15,11 +15,11 @@
         "ofetch": "^1.4.1",
         "react": "^19.1.0",
         "react-dom": "^19.1.0",
-        "sonner": "^2.0.4",
+        "sonner": "^2.0.5",
         "srt-parser-2": "^1.2.3",
         "tailwind-merge": "^3.3.0",
         "turndown": "^7.2.0",
-        "tw-animate-css": "^1.3.3",
+        "tw-animate-css": "^1.3.4",
       },
       "devDependencies": {
         "@biomejs/biome": "^1.9.4",
@@ -33,7 +33,7 @@
         "taze": "^19.1.0",
         "typescript": "^5.8.3",
         "vite-tsconfig-paths": "^5.1.4",
-        "wxt": "^0.20.6",
+        "wxt": "^0.20.7",
       },
     },
   },
@@ -378,7 +378,7 @@
 
     "@webext-core/match-patterns": ["@webext-core/match-patterns@1.0.3", "", {}, "sha512-NY39ACqCxdKBmHgw361M9pfJma8e4AZo20w9AY+5ZjIj1W2dvXC8J31G5fjfOGbulW9w4WKpT8fPooi0mLkn9A=="],
 
-    "@wxt-dev/browser": ["@wxt-dev/browser@0.0.317", "", { "dependencies": { "@types/filesystem": "*", "@types/har-format": "*" } }, "sha512-tpFr/OJjTlGY7FLIr950fNi9fIBLQQ9pRVDDajeqEMip5LsXFAxpbF4I1GAGUkdTJEghKQ8P5N9XnsAdbPBAOQ=="],
+    "@wxt-dev/browser": ["@wxt-dev/browser@0.0.326", "", { "dependencies": { "@types/filesystem": "*", "@types/har-format": "*" } }, "sha512-4Pb4ES7jMsxYFHEEhK005bOL2BnDEXO3jjZTOvF0gWdota8Ytpg81VtKVSC1ohj17C6tE6oNI3FdcVRfKUBl3Q=="],
 
     "@wxt-dev/module-react": ["@wxt-dev/module-react@1.1.3", "", { "dependencies": { "@vitejs/plugin-react": "^4.3.4" }, "peerDependencies": { "wxt": ">=0.19.16" } }, "sha512-ede2FLS3sdJwtyI61jvY1UiF194ouv3wxm+fCYjfP4FfvoXQbif8UuusYBC0KSa/L2AL9Cfa/lEvsdNYrKFUaA=="],
 
@@ -1222,7 +1222,7 @@
 
     "sonic-boom": ["sonic-boom@4.2.0", "", { "dependencies": { "atomic-sleep": "^1.0.0" } }, "sha512-INb7TM37/mAcsGmc9hyyI6+QR3rR1zVRu36B0NeGXKnOOLiZOfER5SA+N7X7k3yUYRzLWafduTDvJAfDswwEww=="],
 
-    "sonner": ["sonner@2.0.4", "", { "peerDependencies": { "react": "^18.0.0 || ^19.0.0 || ^19.0.0-rc", "react-dom": "^18.0.0 || ^19.0.0 || ^19.0.0-rc" } }, "sha512-fUOGFwhM9/t05VqjKeDv0+t6QZPByMkbFFs6IFsgRQKCBh/1d3HUAC5sYy80Q05+vDKdwSOG/zUPBc8PPpbDjw=="],
+    "sonner": ["sonner@2.0.5", "", { "peerDependencies": { "react": "^18.0.0 || ^19.0.0 || ^19.0.0-rc", "react-dom": "^18.0.0 || ^19.0.0 || ^19.0.0-rc" } }, "sha512-YwbHQO6cSso3HBXlbCkgrgzDNIhws14r4MO87Ofy+cV2X7ES4pOoAK3+veSmVTvqNx1BWUxlhPmZzP00Crk2aQ=="],
 
     "source-map": ["source-map@0.6.1", "", {}, "sha512-UjgapumWlbMhkBgzT7Ykc5YXUT46F0iKu8SGXq0bcwP5dz/h0Plj6enJqjz1Zbq2l5WaqYnrVbwWOWMyF3F47g=="],
 
@@ -1314,7 +1314,7 @@
 
     "turndown": ["turndown@7.2.0", "", { "dependencies": { "@mixmark-io/domino": "^2.2.0" } }, "sha512-eCZGBN4nNNqM9Owkv9HAtWRYfLA4h909E/WGAWWBpmB275ehNhZyk87/Tpvjbp0jjNl9XwCsbe6bm6CqFsgD+A=="],
 
-    "tw-animate-css": ["tw-animate-css@1.3.3", "", {}, "sha512-tXE2TRWrskc4TU3RDd7T8n8Np/wCfoeH9gz22c7PzYqNPQ9FBGFbWWzwL0JyHcFp+jHozmF76tbHfPAx22ua2Q=="],
+    "tw-animate-css": ["tw-animate-css@1.3.4", "", {}, "sha512-dd1Ht6/YQHcNbq0znIT6dG8uhO7Ce+VIIhZUhjsryXsMPJQz3bZg7Q2eNzLwipb25bRZslGb2myio5mScd1TFg=="],
 
     "type-fest": ["type-fest@4.41.0", "", {}, "sha512-TeTSQ6H5YHvpqVwBRcnLDCBnDOHWYu7IvGbHT6N8AOymcr9PJGjc1GTtiWZTYg0NCgYwvnYWEkVChQAr9bjfwA=="],
 
@@ -1400,7 +1400,7 @@
 
     "ws": ["ws@8.18.1", "", { "peerDependencies": { "bufferutil": "^4.0.1", "utf-8-validate": ">=5.0.2" }, "optionalPeers": ["bufferutil", "utf-8-validate"] }, "sha512-RKW2aJZMXeMxVpnZ6bck+RswznaxmzdULiBr6KY7XkTnW8uvt0iT9H5DkHUChXrc+uurzwa0rVI16n/Xzjdz1w=="],
 
-    "wxt": ["wxt@0.20.6", "", { "dependencies": { "@1natsu/wait-element": "^4.1.2", "@aklinker1/rollup-plugin-visualizer": "5.12.0", "@webext-core/fake-browser": "^1.3.2", "@webext-core/isolated-element": "^1.1.2", "@webext-core/match-patterns": "^1.0.3", "@wxt-dev/browser": "0.0.317", "@wxt-dev/storage": "^1.0.0", "async-mutex": "^0.5.0", "c12": "^3.0.3", "cac": "^6.7.14", "chokidar": "^4.0.3", "ci-info": "^4.2.0", "consola": "^3.4.2", "defu": "^6.1.4", "dotenv": "^16.4.7", "dotenv-expand": "^12.0.1", "esbuild": "^0.25.0", "fast-glob": "^3.3.3", "filesize": "^10.1.6", "fs-extra": "^11.3.0", "get-port-please": "^3.1.2", "giget": "^1.2.3 || ^2.0.0", "hookable": "^5.5.3", "import-meta-resolve": "^4.1.0", "is-wsl": "^3.1.0", "json5": "^2.2.3", "jszip": "^3.10.1", "linkedom": "^0.18.9", "magicast": "^0.3.5", "minimatch": "^10.0.1", "nano-spawn": "^0.2.0", "normalize-path": "^3.0.0", "nypm": "^0.6.0", "ohash": "^2.0.11", "open": "^10.1.0", "ora": "^8.2.0", "perfect-debounce": "^1.0.0", "picocolors": "^1.1.1", "prompts": "^2.4.2", "publish-browser-extension": "^2.3.0 || ^3.0.0", "scule": "^1.3.0", "unimport": "^3.13.1 || ^4.0.0 || ^5.0.0", "vite": "^5.4.17 || ^6.2.5", "vite-node": "^2.1.4 || ^3.0.0", "web-ext-run": "^0.2.3" }, "bin": { "wxt": "bin/wxt.mjs", "wxt-publish-extension": "bin/wxt-publish-extension.cjs" } }, "sha512-CdExyv2yWfpmPWFjhrKBA+nUSHOTRpRKqScod66AaLpMQ0famZ18tM0+4a9m7oX4Pts1XZH4nw79XQp06QsC2Q=="],
+    "wxt": ["wxt@0.20.7", "", { "dependencies": { "@1natsu/wait-element": "^4.1.2", "@aklinker1/rollup-plugin-visualizer": "5.12.0", "@webext-core/fake-browser": "^1.3.2", "@webext-core/isolated-element": "^1.1.2", "@webext-core/match-patterns": "^1.0.3", "@wxt-dev/browser": "^0.0.326", "@wxt-dev/storage": "^1.0.0", "async-mutex": "^0.5.0", "c12": "^3.0.3", "cac": "^6.7.14", "chokidar": "^4.0.3", "ci-info": "^4.2.0", "consola": "^3.4.2", "defu": "^6.1.4", "dotenv": "^16.5.0", "dotenv-expand": "^12.0.2", "esbuild": "^0.25.0", "fast-glob": "^3.3.3", "filesize": "^10.1.6", "fs-extra": "^11.3.0", "get-port-please": "^3.1.2", "giget": "^1.2.3 || ^2.0.0", "hookable": "^5.5.3", "import-meta-resolve": "^4.1.0", "is-wsl": "^3.1.0", "json5": "^2.2.3", "jszip": "^3.10.1", "linkedom": "^0.18.10", "magicast": "^0.3.5", "minimatch": "^10.0.1", "nano-spawn": "^0.2.0", "normalize-path": "^3.0.0", "nypm": "^0.6.0", "ohash": "^2.0.11", "open": "^10.1.2", "ora": "^8.2.0", "perfect-debounce": "^1.0.0", "picocolors": "^1.1.1", "prompts": "^2.4.2", "publish-browser-extension": "^2.3.0 || ^3.0.0", "scule": "^1.3.0", "unimport": "^3.13.1 || ^4.0.0 || ^5.0.0", "vite": "^5.4.19 || ^6.3.4", "vite-node": "^2.1.4 || ^3.1.2", "web-ext-run": "^0.2.3" }, "bin": { "wxt": "bin/wxt.mjs", "wxt-publish-extension": "bin/wxt-publish-extension.cjs" } }, "sha512-KABq5i3CnXMUaJTcORGDLCi04K/IceUVAx5rler2QbZpLvS13OUOO0k+4s/7LI3+N8zXLh/GlQArMyJfk3M2yQ=="],
 
     "xdg-basedir": ["xdg-basedir@5.1.0", "", {}, "sha512-GCPAHLvrIH13+c0SuacwvRYj2SxJXQ4kaVTT5xgL3kPrz56XxkF21IGhjSE1+W0aw7gpBWRGXLCPnPby6lSpmQ=="],
 
