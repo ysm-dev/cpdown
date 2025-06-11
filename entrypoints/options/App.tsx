@@ -93,7 +93,7 @@ export const App = () => {
 
             <ToggleOption
               title="Show Raycast Confetti"
-              description="Celebrate successful copying with a confetti animation"
+              description="Celebrate successful copying with a confetti animation. Tip: the first time Chrome may ask 'Open Raycast.app?'. Visit https://raycast.com/confetti once and check 'Always allow www.raycast.com to open links of this type' to stop seeing that prompt."
               checked={options.showConfetti}
               onCheckedChange={(checked) =>
                 handleOptionChange("showConfetti", checked)
