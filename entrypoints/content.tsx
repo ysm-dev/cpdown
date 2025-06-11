@@ -45,7 +45,8 @@ const copyAndNotify = async ({
   }
 
   if (showConfetti) {
-    location.href = `raycast://confetti`
+    // Send a message to the background script to open the Raycast confetti URL
+    browser.runtime.sendMessage({ type: "OPEN_CONFETTI" })
   }
 }
 

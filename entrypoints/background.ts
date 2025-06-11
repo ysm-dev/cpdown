@@ -11,6 +11,33 @@ export default defineBackground(() => {
     }
   })
 
+  // Listen for messages from content scripts to open Raycast confetti without triggering page-level prompts
+  browser.runtime.onMessage.addListener((msg) => {
+    if (msg.type === "OPEN_CONFETTI") {
+      // Capture the currently active tab so focus can stay there
+      browser.tabs
+        .query({ active: true, currentWindow: true })
+        .then(([currentTab]) => {
+          // Open the confetti redirect tab in the background
+          browser.tabs
+            .create({ url: "https://raycast.com/confetti", active: false })
+            .then((confettiTab) => {
+              if (!confettiTab.id) return
+
+              // Close the confetti tab automatically after a short delay
+              setTimeout(() => {
+                browser.tabs.remove(confettiTab.id!).catch(() => {
+                  /* tab already closed */
+                })
+              }, 2000) // 2 초면 redirect 및 Raycast 실행 충분
+            })
+            .catch((err) => {
+              console.error("Failed to open confetti tab:", err)
+            })
+        })
+    }
+  })
+
   async function copyCurrentPageAsMarkdown() {
     try {
       // Get the current active tab
