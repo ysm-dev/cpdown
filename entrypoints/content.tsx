@@ -14,6 +14,41 @@ import { browser } from "wxt/browser"
 
 const tiktoken = new Tiktoken(o200k_base)
 
+// Utility to copy markdown to clipboard, respond to sender and optionally show toast/confetti
+const copyAndNotify = async ({
+  markdown,
+  wrapInTripleBackticks,
+  showSuccessToast,
+  showConfetti,
+  sendResponse,
+  successMessagePrefix,
+}: {
+  markdown: string
+  wrapInTripleBackticks: boolean
+  showSuccessToast: boolean
+  showConfetti: boolean
+  sendResponse: (response: { success: boolean }) => void
+  successMessagePrefix: string
+}) => {
+  if (wrapInTripleBackticks) {
+    markdown = `\`\`\`md\n${markdown}\n\`\`\``
+  }
+
+  await navigator.clipboard.writeText(markdown)
+
+  sendResponse({ success: true })
+
+  const tokens = tiktoken.encode(markdown)
+
+  if (showSuccessToast) {
+    showNotification(`${successMessagePrefix} (${tokens.length} tokens)`)
+  }
+
+  if (showConfetti) {
+    location.href = `raycast://confetti`
+  }
+}
+
 export default defineContentScript({
   matches: ["*://*/*"],
   main() {
@@ -80,23 +115,14 @@ export default defineContentScript({
             .turndown(html)
         }
 
-        if (wrapInTripleBackticks) {
-          markdown = `\`\`\`md\n${markdown}\n\`\`\``
-        }
-
-        const tokens = tiktoken.encode(markdown)
-
-        await navigator.clipboard.writeText(markdown)
-
-        sendResponse({ success: true })
-
-        if (showSuccessToast) {
-          showNotification(`Copied as markdown (${tokens.length} tokens)`)
-        }
-
-        if (showConfetti) {
-          location.href = `raycast://confetti`
-        }
+        await copyAndNotify({
+          markdown,
+          wrapInTripleBackticks,
+          showSuccessToast,
+          showConfetti,
+          sendResponse,
+          successMessagePrefix: "Copied as markdown",
+        })
 
         return true
       }
@@ -123,25 +149,14 @@ export default defineContentScript({
 
         markdown = `# ${title}\n\n${markdown}`
 
-        if (wrapInTripleBackticks) {
-          markdown = `\`\`\`md\n${markdown}\n\`\`\``
-        }
-
-        await navigator.clipboard.writeText(markdown)
-
-        sendResponse({ success: true })
-
-        const tokens = tiktoken.encode(markdown)
-
-        if (showSuccessToast) {
-          showNotification(
-            `Subtitle copied to clipboard (${tokens.length} tokens)`,
-          )
-        }
-
-        if (showConfetti) {
-          location.href = `raycast://confetti`
-        }
+        await copyAndNotify({
+          markdown,
+          wrapInTripleBackticks,
+          showSuccessToast,
+          showConfetti,
+          sendResponse,
+          successMessagePrefix: "Subtitle copied to clipboard",
+        })
 
         return true
       }
