@@ -1,15 +1,27 @@
-name: Claude Review
+name: Claude Assistant
 
 on:
-  pull_request:
-    types: [opened]
+  issue_comment:
+    types: [created]
+  pull_request_review_comment:
+    types: [created]
+  issues:
+    types: [opened, assigned]
+  pull_request_review:
+    types: [submitted]
 
 jobs:
   claude-code:
+    if: |
+      (github.event_name == 'issue_comment' && contains(github.event.comment.body, '@claude')) ||
+      (github.event_name == 'pull_request_review_comment' && contains(github.event.comment.body, '@claude')) ||
+      (github.event_name == 'pull_request_review' && contains(github.event.review.body, '@claude')) ||
+      (github.event_name == 'issues' && contains(github.event.issue.body, '@claude'))
     runs-on: ubuntu-latest
     permissions:
       contents: read
       pull-requests: read
+      issues: read
       id-token: write
 
     steps:
@@ -51,18 +63,4 @@ jobs:
           anthropic_api_key: "empty"
           model: claude-sonnet-4
           timeout_minutes: 10
-          direct_prompt: |
-            Please review this pull request and provide comprehensive feedback.
-
-            Focus on:
-            - Code quality and best practices
-            - Potential bugs or issues
-            - Performance considerations
-            - Security implications
-            - Test coverage
-            - Documentation updates if needed
-
-            Provide constructive feedback with specific suggestions for improvement.
-            Use inline comments to highlight specific areas of concern.
-
-            Always answer in English, and provide translation in Korean.
+          custom_instructions: "Always answer in English, and provide translation in Korean."
