@@ -1,0 +1,66 @@
+name: Claude Assistant
+
+on:
+  issue_comment:
+    types: [created]
+  pull_request_review_comment:
+    types: [created]
+  issues:
+    types: [opened, assigned]
+  pull_request_review:
+    types: [submitted]
+
+jobs:
+  claude-code:
+    if: |
+      (github.event_name == 'issue_comment' && contains(github.event.comment.body, '@claude')) ||
+      (github.event_name == 'pull_request_review_comment' && contains(github.event.comment.body, '@claude')) ||
+      (github.event_name == 'pull_request_review' && contains(github.event.review.body, '@claude')) ||
+      (github.event_name == 'issues' && contains(github.event.issue.body, '@claude'))
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+      issues: read
+      id-token: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@main
+        with:
+          fetch-depth: 1
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - run: |
+          COPILOT_TOKEN=${{ secrets.COPILOT_TOKEN }} nohup bunx gh-copilot-proxy@latest &
+        shell: bash
+
+      - name: Setup Claude Code Router config
+        run: |
+          mkdir -p $HOME/.claude-code-router
+          cat << 'EOF' > $HOME/.claude-code-router/config.json
+          {
+            "log": true,
+            "OPENAI_API_KEY": "empty",
+            "OPENAI_BASE_URL": "http://localhost:6229",
+            "OPENAI_MODEL": "claude-sonnet-4"
+          }
+          EOF
+
+      - name: Start Claude Code Router
+        run: |
+          nohup bunx @musistudio/claude-code-router@latest start &
+        shell: bash
+
+      - name: Automatic PR Review
+        uses: anthropics/claude-code-action@beta
+        env:
+          ANTHROPIC_BASE_URL: http://localhost:3456
+        with:
+          anthropic_api_key: "empty"
+          model: claude-sonnet-4
+          timeout_minutes: 10
+          custom_instructions: "Always answer in English, and provide translation in Korean."
