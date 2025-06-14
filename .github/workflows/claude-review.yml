@@ -23,7 +23,7 @@ jobs:
           bun-version-file: ".bun-version"
 
       - run: |
-          nohup COPILOT_TOKEN=${{ secrets.COPILOT_TOKEN }} bunx gh-copilot-proxy@latest &
+          COPILOT_TOKEN=${{ secrets.COPILOT_TOKEN }} nohup bunx gh-copilot-proxy@latest &
         shell: bash
 
       - name: Setup Claude Code Router config
