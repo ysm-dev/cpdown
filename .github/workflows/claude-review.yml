@@ -1,0 +1,68 @@
+name: Claude Review
+
+on:
+  pull_request:
+    types: [opened]
+
+jobs:
+  claude-code:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+      id-token: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@main
+        with:
+          fetch-depth: 1
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version-file: ".bun-version"
+
+      - run: |
+          nohup COPILOT_TOKEN=${{ secrets.COPILOT_TOKEN }} bunx gh-copilot-proxy@latest &
+        shell: bash
+
+      - name: Setup Claude Code Router config
+        run: |
+          mkdir -p $HOME/.claude-code-router
+          cat << 'EOF' > $HOME/.claude-code-router/config.json
+          {
+            "log": true,
+            "OPENAI_API_KEY": "random",
+            "OPENAI_BASE_URL": "http://localhost:6229",
+            "OPENAI_MODEL": "claude-sonnet-4"
+          }
+          EOF
+
+      - name: Start Claude Code Router
+        run: |
+          nohup bunx @musistudio/claude-code-router@latest start &
+        shell: bash
+
+      - name: Automatic PR Review
+        uses: anthropics/claude-code-action@beta
+        env:
+          ANTHROPIC_BASE_URL: http://localhost:3456
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          model: claude-sonnet-4
+          timeout_minutes: 10
+          direct_prompt: |
+            Please review this pull request and provide comprehensive feedback.
+
+            Focus on:
+            - Code quality and best practices
+            - Potential bugs or issues
+            - Performance considerations
+            - Security implications
+            - Test coverage
+            - Documentation updates if needed
+
+            Provide constructive feedback with specific suggestions for improvement.
+            Use inline comments to highlight specific areas of concern.
+
+            Always answer in both English and Korean. (Enlgish first, Korean second)
