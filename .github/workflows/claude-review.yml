@@ -32,7 +32,7 @@ jobs:
           cat << 'EOF' > $HOME/.claude-code-router/config.json
           {
             "log": true,
-            "OPENAI_API_KEY": "random",
+            "OPENAI_API_KEY": "empty",
             "OPENAI_BASE_URL": "http://localhost:6229",
             "OPENAI_MODEL": "claude-sonnet-4"
           }
@@ -48,7 +48,7 @@ jobs:
         env:
           ANTHROPIC_BASE_URL: http://localhost:3456
         with:
-          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          anthropic_api_key: "empty"
           model: claude-sonnet-4
           timeout_minutes: 10
           direct_prompt: |
