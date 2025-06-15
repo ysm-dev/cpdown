@@ -63,4 +63,4 @@ jobs:
           anthropic_api_key: "empty"
           model: claude-sonnet-4
           timeout_minutes: 10
-          custom_instructions: "Always answer in English, and provide translation in Korean."
+          custom_instructions: "Always answer in Korean."

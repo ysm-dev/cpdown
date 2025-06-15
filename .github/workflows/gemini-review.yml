@@ -1,4 +1,4 @@
-name: Claude Review
+name: Gemini Review
 
 on:
   pull_request:
@@ -34,7 +34,7 @@ jobs:
             "log": true,
             "OPENAI_API_KEY": "empty",
             "OPENAI_BASE_URL": "http://localhost:6229",
-            "OPENAI_MODEL": "claude-sonnet-4"
+            "OPENAI_MODEL": "gemini-2.5-pro"
           }
           EOF
 
@@ -49,7 +49,7 @@ jobs:
           ANTHROPIC_BASE_URL: http://localhost:3456
         with:
           anthropic_api_key: "empty"
-          model: claude-sonnet-4
+          model: gemini-2.5-pro
           timeout_minutes: 10
           direct_prompt: |
             Please review this pull request and provide comprehensive feedback.
