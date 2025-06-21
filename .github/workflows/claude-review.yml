@@ -22,35 +22,13 @@ jobs:
         with:
           bun-version: latest
 
-      - run: |
-          COPILOT_TOKEN=${{ secrets.COPILOT_TOKEN }} nohup bunx gh-copilot-proxy@latest &
-        shell: bash
-
-      - name: Setup Claude Code Router config
-        run: |
-          mkdir -p $HOME/.claude-code-router
-          cat << 'EOF' > $HOME/.claude-code-router/config.json
-          {
-            "log": true,
-            "OPENAI_API_KEY": "empty",
-            "OPENAI_BASE_URL": "http://localhost:6229",
-            "OPENAI_MODEL": "claude-sonnet-4"
-          }
-          EOF
-
-      - name: Start Claude Code Router
-        run: |
-          nohup bunx @musistudio/claude-code-router@latest start &
-        shell: bash
-
       - name: Automatic PR Review
         uses: anthropics/claude-code-action@beta
         env:
-          ANTHROPIC_BASE_URL: http://localhost:3456
+          ANTHROPIC_BASE_URL: ${{ secrets.ANTHROPIC_BASE_URL }}
         with:
-          anthropic_api_key: "empty"
-          model: claude-sonnet-4
-          timeout_minutes: 10
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          model: gpt-4.1
           direct_prompt: |
             Please review this pull request and provide comprehensive feedback.
 
