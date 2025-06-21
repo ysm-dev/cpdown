@@ -41,4 +41,3 @@ jobs:
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           model: gpt-4.1
-          custom_instructions: "Always answer in Korean."
