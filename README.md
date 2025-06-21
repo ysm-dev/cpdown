@@ -29,6 +29,8 @@ https://github.com/user-attachments/assets/cedf05e8-ed1d-4e71-9769-66c9b292fbdd
 
 ## Options
 
+Go to [chrome://extensions/?options=knnaflplggjdedobhbidojmmnocfbopf](chrome://extensions/?options=knnaflplggjdedobhbidojmmnocfbopf) or click the "Options" link in the extension's details page to configure cpdown after installation.
+
 ![](.github/assets/options.png)
 
 
