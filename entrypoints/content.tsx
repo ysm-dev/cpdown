@@ -34,7 +34,19 @@ const copyAndNotify = async ({
     markdown = `\`\`\`md\n${markdown}\n\`\`\``
   }
 
-  await navigator.clipboard.writeText(markdown)
+  try {
+    await navigator.clipboard.writeText(markdown)
+  } catch (error) {
+    // Fallback for when document is not focused (e.g., DevTools is open)
+    const textarea = document.createElement("textarea")
+    textarea.value = markdown
+    textarea.style.position = "fixed"
+    textarea.style.opacity = "0"
+    document.body.appendChild(textarea)
+    textarea.select()
+    document.execCommand("copy")
+    document.body.removeChild(textarea)
+  }
 
   sendResponse({ success: true })
 
@@ -138,7 +150,10 @@ export default defineContentScript({
 
         const videoInfo = await getVideoInfo(videoId)
 
-        const title = videoInfo.videoDetails.title
+        const title =
+          videoInfo?.videoDetails?.title ||
+          document.querySelector("#title")?.textContent?.trim() ||
+          "Untitle Video"
 
         const subtitle = await getVideoSubtitle(videoId)
 
