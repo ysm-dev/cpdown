@@ -1,8 +1,6 @@
-// import "@/assets/tailwind.css"
-
-import { ToggleOption } from "@/components/ToggleOption"
-import { type OptionsState, getOptions, saveOptions } from "@/lib/storage"
 import { useEffect, useState } from "react"
+import { ToggleOption } from "@/components/ToggleOption"
+import { getOptions, type OptionsState, saveOptions } from "@/lib/storage"
 import packageJson from "../../package.json"
 
 export const App = () => {
