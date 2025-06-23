@@ -1,9 +1,3 @@
-import { Noti, getRoot, showNotification } from "@/lib/showNotification"
-import { getOptions } from "@/lib/storage"
-import { defaultTagsToRemove } from "@/lib/tagsToRemove"
-import { convertSrtToText } from "@/lib/yt/convertSrtToText"
-import { getVideoInfo } from "@/lib/yt/getVideoInfo"
-import { getVideoSubtitle } from "@/lib/yt/getVideoSubtitle"
 import { Readability } from "@mozilla/readability"
 import Defuddle from "defuddle"
 import { Tiktoken } from "js-tiktoken/lite"
@@ -11,6 +5,12 @@ import o200k_base from "js-tiktoken/ranks/o200k_base"
 import { createRoot } from "react-dom/client"
 import Turndown from "turndown"
 import { browser } from "wxt/browser"
+import { getRoot, Noti, showNotification } from "@/lib/showNotification"
+import { getOptions } from "@/lib/storage"
+import { defaultTagsToRemove } from "@/lib/tagsToRemove"
+import { convertSrtToText } from "@/lib/yt/convertSrtToText"
+import { getVideoInfo } from "@/lib/yt/getVideoInfo"
+import { getVideoSubtitle } from "@/lib/yt/getVideoSubtitle"
 
 const tiktoken = new Tiktoken(o200k_base)
 

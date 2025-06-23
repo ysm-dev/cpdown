@@ -1,6 +1,6 @@
-import { getVideoInfo } from "@/lib/yt/getVideoInfo"
 import { memoize } from "@fxts/core"
 import { ofetch } from "ofetch"
+import { getVideoInfo } from "@/lib/yt/getVideoInfo"
 
 export const getVideoSubtitle = memoize(async (videoId: string) => {
   const r = await getVideoInfo(videoId)
