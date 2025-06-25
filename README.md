@@ -25,7 +25,7 @@ https://github.com/user-attachments/assets/cedf05e8-ed1d-4e71-9769-66c9b292fbdd
 ## Installation
 
 - Chrome: [Chrome Web Store](https://chromewebstore.google.com/detail/cpdown/knnaflplggjdedobhbidojmmnocfbopf)
-- Firefox: [Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/cpdown/) (Coming soon)
+- Firefox: [Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/cpdown/)
 
 ## Options
 
