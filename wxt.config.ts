@@ -19,6 +19,7 @@ export default defineConfig({
       },
     },
     permissions: ["activeTab", "clipboardWrite", "scripting", "storage"],
+    host_permissions: ["<all_urls>"],
   },
   vite: () => ({
     plugins: [

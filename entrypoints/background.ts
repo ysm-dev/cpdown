@@ -1,4 +1,42 @@
 import { browser } from "wxt/browser"
+import { showNotification } from "@/lib/showNotification"
+
+// Helper function to check if a URL can be injected with scripts
+function isInjectableUrl(url?: string): boolean {
+  if (!url) return false
+
+  const restrictedProtocols = [
+    "chrome:",
+    "chrome-extension:",
+    "moz-extension:",
+    "edge-extension:",
+    "about:",
+    "data:",
+    "javascript:",
+    "moz-extension:",
+    "chrome-search:",
+    "chrome-devtools:",
+  ]
+
+  const restrictedUrls = [
+    "chrome://newtab/",
+    "edge://newtab/",
+    "about:newtab",
+    "about:blank",
+  ]
+
+  // Check if URL starts with any restricted protocol
+  if (restrictedProtocols.some((protocol) => url.startsWith(protocol))) {
+    return false
+  }
+
+  // Check if URL is in restricted URLs list
+  if (restrictedUrls.some((restrictedUrl) => url.startsWith(restrictedUrl))) {
+    return false
+  }
+
+  return true
+}
 
 export default defineBackground(() => {
   browser.action.onClicked.addListener(() => {
@@ -48,10 +86,21 @@ export default defineBackground(() => {
 
       if (!activeTab.id) {
         console.error("Active tab has no ID")
+        showNotification("Error: Could not identify the current tab", "error")
         return
       }
 
       const url = activeTab.url
+
+      // Check if the URL is injectable
+      if (!isInjectableUrl(url)) {
+        console.log("Cannot inject script into restricted URL:", url)
+        showNotification(
+          "Cannot copy content from this page. This is a restricted page (browser internal page, extension page, etc.)",
+          "warning",
+        )
+        return
+      }
 
       const isYoutube = url?.includes("youtube.com")
 
@@ -94,6 +143,31 @@ export default defineBackground(() => {
       }
     } catch (error) {
       console.error("Error getting page content:", error)
+
+      // Handle specific error types
+      if (error instanceof Error) {
+        if (error.message.includes("Cannot access contents of the page")) {
+          showNotification(
+            "Cannot access this page. The page may be restricted, still loading, or you may need to refresh and try again.",
+            "error",
+          )
+        } else if (error.message.includes("Extension context invalidated")) {
+          showNotification(
+            "Extension was reloaded. Please refresh the page and try again.",
+            "warning",
+          )
+        } else {
+          showNotification(
+            `Failed to copy page content: ${error.message}`,
+            "error",
+          )
+        }
+      } else {
+        showNotification(
+          "An unexpected error occurred while copying page content",
+          "error",
+        )
+      }
     }
   }
 })
