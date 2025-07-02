@@ -64,8 +64,20 @@ const copyAndNotify = async ({
 
 export default defineContentScript({
   matches: ["*://*/*"],
-  main() {
+  async main() {
     createRoot(getRoot()).render(<Noti />)
+
+    // Inject main world script for YouTube pages
+    if (window.location.hostname.includes("youtube.com")) {
+      try {
+        await injectScript("/youtube-main-world.js", {
+          keepInDom: true,
+        })
+        console.log("YouTube main world script injected")
+      } catch (error) {
+        console.error("Failed to inject YouTube main world script:", error)
+      }
+    }
 
     browser.runtime.onMessage.addListener(async (msg, sender, sendResponse) => {
       if (msg.type === "COPY_TEXT") {
@@ -148,7 +160,7 @@ export default defineContentScript({
 
         const videoId = msg.payload
 
-        const videoInfo = await getVideoInfo(videoId)
+        const { r: videoInfo } = await getVideoInfo(videoId)
 
         const title =
           videoInfo?.videoDetails?.title ||
@@ -163,7 +175,7 @@ export default defineContentScript({
 
         let markdown = await convertSrtToText(videoId, subtitle)
 
-        markdown = `# ${title}\n\n${markdown}`
+        markdown = `# ${title}\n\n\n${markdown}`
 
         await copyAndNotify({
           markdown,

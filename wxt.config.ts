@@ -20,6 +20,12 @@ export default defineConfig({
     },
     permissions: ["activeTab", "clipboardWrite", "scripting", "storage"],
     host_permissions: ["<all_urls>"],
+    web_accessible_resources: [
+      {
+        resources: ["youtube-main-world.js"],
+        matches: ["*://*.youtube.com/*"],
+      },
+    ],
   },
   vite: () => ({
     plugins: [

@@ -1,7 +1,51 @@
 import { memoize } from "@fxts/core"
 import { ofetch } from "ofetch"
 
+// Helper function to communicate with main world script
+const getYtInitialPlayerResponse = (): Promise<any | null> => {
+  return new Promise((resolve) => {
+    const requestId = Math.random().toString(36).substring(7)
+
+    // Listen for response from main world script
+    const handleMessage = (event: MessageEvent) => {
+      if (event.source !== window) return
+
+      if (
+        event.data.type === "YT_INITIAL_PLAYER_RESPONSE" &&
+        event.data.requestId === requestId
+      ) {
+        window.removeEventListener("message", handleMessage)
+        resolve(event.data.data)
+      }
+    }
+
+    window.addEventListener("message", handleMessage)
+
+    // Request data from main world script
+    window.postMessage(
+      {
+        type: "GET_YT_INITIAL_PLAYER_RESPONSE",
+        requestId: requestId,
+      },
+      "*",
+    )
+
+    // Timeout after 1 second if no response
+    setTimeout(() => {
+      window.removeEventListener("message", handleMessage)
+      resolve(null)
+    }, 1000)
+  })
+}
+
 export const getVideoInfo = memoize(async (videoId: string) => {
+  // First try to get from main world script
+  const { ytInitialPlayerResponse, pot } = await getYtInitialPlayerResponse()
+
+  if (ytInitialPlayerResponse) {
+    return { r: ytInitialPlayerResponse, pot }
+  }
+
   const r = await ofetch<Response>(
     `https://www.youtube.com/youtubei/v1/player`,
     {
@@ -19,7 +63,7 @@ export const getVideoInfo = memoize(async (videoId: string) => {
     },
   )
 
-  return r
+  return { r, pot }
 })
 
 interface Response {
