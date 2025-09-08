@@ -32,20 +32,20 @@
     "srt-parser-2": "^1.2.3",
     "tailwind-merge": "^3.3.1",
     "turndown": "^7.2.1",
-    "tw-animate-css": "^1.3.7"
+    "tw-animate-css": "^1.3.8"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.2.2",
-    "@tailwindcss/vite": "^4.1.12",
+    "@biomejs/biome": "^2.2.3",
+    "@tailwindcss/vite": "^4.1.13",
     "@types/react": "^19.1.12",
     "@types/react-dom": "^19.1.9",
     "@types/turndown": "^5.0.5",
-    "@wxt-dev/module-react": "^1.1.3",
-    "shadcn": "^3.0.0",
-    "tailwindcss": "^4.1.12",
-    "taze": "^19.3.0",
+    "@wxt-dev/module-react": "^1.1.5",
+    "shadcn": "^3.2.1",
+    "tailwindcss": "^4.1.13",
+    "taze": "^19.5.0",
     "typescript": "^5.9.2",
     "vite-tsconfig-paths": "^5.1.4",
-    "wxt": "^0.20.8"
+    "wxt": "^0.20.11"
   }
 }
