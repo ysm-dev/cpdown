@@ -17,7 +17,7 @@
     "pkg:bump": "taze major -lwi"
   },
   "dependencies": {
-    "@fxts/core": "^1.15.0",
+    "@fxts/core": "^1.17.0",
     "@mozilla/readability": "^0.6.0",
     "@radix-ui/react-switch": "^1.2.6",
     "class-variance-authority": "^0.7.1",
@@ -41,9 +41,9 @@
     "@types/react-dom": "^19.1.9",
     "@types/turndown": "^5.0.5",
     "@wxt-dev/module-react": "^1.1.5",
-    "shadcn": "^3.2.1",
+    "shadcn": "^3.3.1",
     "tailwindcss": "^4.1.13",
-    "taze": "^19.6.0",
+    "taze": "^19.7.0",
     "typescript": "^5.9.2",
     "vite-tsconfig-paths": "^5.1.4",
     "wxt": "^0.20.11"
