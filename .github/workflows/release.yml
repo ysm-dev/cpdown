@@ -16,7 +16,7 @@ jobs:
 
     steps:
       - name: Check out code
-        uses: actions/checkout@main
+        uses: actions/checkout@v5
         with:
           fetch-depth: 2
 
@@ -41,9 +41,9 @@ jobs:
 
     steps:
       - name: Check out code
-        uses: actions/checkout@main
+        uses: actions/checkout@v5
 
-      - uses: oven-sh/setup-bun@main
+      - uses: oven-sh/setup-bun@v2
 
       - run: bun i -g @antfu/ni
       - run: ni --ignore-scripts

@@ -2,8 +2,7 @@ name: Evergreen
 
 on:
   schedule:
-    # Every 5PM on Sunday PT
-    - cron: "0 17 * * 0"
+    - cron: '0 0 * * 1'
 
   workflow_dispatch:
 
@@ -16,15 +15,18 @@ jobs:
       pull-requests: write
 
     steps:
-      - uses: actions/checkout@main
-      - uses: actions/setup-node@main
+      - uses: actions/checkout@v5
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - uses: actions/setup-node@v6
         with:
           node-version: latest
 
-      - run: npm i -g pnpm yarn bun @antfu/ni
-      - run: nlx taze latest -wif
+      - run: bun i
+      - run: bun bump
 
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@main
+        uses: peter-evans/create-pull-request@v7
         with:
           title: Bump dependencies
