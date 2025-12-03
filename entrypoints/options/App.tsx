@@ -2,9 +2,11 @@ import { useEffect, useState } from "react"
 import { ToggleOption } from "@/components/ToggleOption"
 import { getOptions, type OptionsState, saveOptions } from "@/lib/storage"
 import packageJson from "../../package.json"
+import { SubtitleSelector, type Track } from "@/components/SubtitleSelector"
 
 export const App = () => {
   const [options, setOptions] = useState<OptionsState | null>(null)
+  const [showSelector, setShowSelector] = useState(false)
 
   useEffect(() => {
     const loadOptions = async () => {
@@ -33,11 +35,48 @@ export const App = () => {
     await saveOptions(newOptions)
   }
 
+  const mockTracks: Track[] = [
+    {
+      baseUrl: "http://example.com/en",
+      name: { simpleText: "English" },
+      languageCode: "en",
+    },
+    {
+      baseUrl: "http://example.com/es",
+      name: { simpleText: "Spanish" },
+      languageCode: "es",
+    },
+    {
+      baseUrl: "http://example.com/ja",
+      name: { simpleText: "Japanese" },
+      languageCode: "ja",
+      kind: "asr",
+    },
+  ]
+
   return (
     <div className="mx-auto flex min-h-screen max-w-xl flex-col bg-background p-4 text-foreground">
       <header className="mb-4">
         <h1 className="font-bold text-xl">Settings</h1>
       </header>
+
+      <button
+        onClick={() => setShowSelector(true)}
+        className="mb-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+      >
+        Test Subtitle Selector
+      </button>
+
+      {showSelector && (
+        <div className="relative border p-4 mb-4 h-64 bg-gray-100">
+           {/* Render it inside this relative container to simulate how it looks */}
+           <SubtitleSelector
+             tracks={mockTracks}
+             onSelect={(track) => alert(`Selected ${track.name.simpleText}`)}
+             onClose={() => setShowSelector(false)}
+           />
+        </div>
+      )}
 
       <div className="space-y-1 rounded-lg border border-border bg-card p-6">
         {options && (

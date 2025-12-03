@@ -35,6 +35,8 @@ Go to [chrome://extensions/?options=knnaflplggjdedobhbidojmmnocfbopf](chrome://e
 
 ### Manual Installation
 
+#### Chrome
+
 1. Clone this repository
 2. Install dependencies:
    ```sh
@@ -48,6 +50,23 @@ Go to [chrome://extensions/?options=knnaflplggjdedobhbidojmmnocfbopf](chrome://e
    - Open Chrome/Edge and navigate to `chrome://extensions`
    - Enable "Developer mode"
    - Click "Load unpacked" and select the `.output/chrome-mv3` directory
+
+#### Firefox
+
+1. Clone this repository
+2. Install dependencies:
+   ```sh
+   bun i
+   ```
+3. Build the extension:
+   ```sh
+   bun run build:firefox
+   ```
+4. Load the temporary extension:
+   - Open Firefox and navigate to `about:debugging`
+   - Click "This Firefox"
+   - Click "Load Temporary Add-on..."
+   - Select the `manifest.json` file in the `.output/firefox-mv2` directory
 
 ## Usage
 

@@ -10,7 +10,11 @@ import { getOptions } from "@/lib/storage"
 import { defaultTagsToRemove } from "@/lib/tagsToRemove"
 import { convertSrtToText } from "@/lib/yt/convertSrtToText"
 import { getVideoInfo } from "@/lib/yt/getVideoInfo"
-import { getVideoSubtitle } from "@/lib/yt/getVideoSubtitle"
+import {
+  downloadSubtitle,
+  getVideoSubtitlesList,
+} from "@/lib/yt/getVideoSubtitle"
+import { SubtitleSelector, type Track } from "@/components/SubtitleSelector"
 
 const tiktoken = new Tiktoken(o200k_base)
 
@@ -167,24 +171,79 @@ export default defineContentScript({
           document.querySelector("#title")?.textContent?.trim() ||
           "Untitle Video"
 
-        const subtitle = await getVideoSubtitle(videoId)
+        const subtitleData = await getVideoSubtitlesList(videoId)
 
-        if (!subtitle) {
-          throw new Error("No subtitle found")
+        if (!subtitleData || !subtitleData.tracks || subtitleData.tracks.length === 0) {
+          showNotification("No subtitle found", "error")
+          return
         }
 
-        let markdown = await convertSrtToText(videoId, subtitle)
+        const { tracks, pot } = subtitleData
 
-        markdown = `# ${title}\n\n\n${markdown}`
+        // Helper function to handle subtitle processing and notification
+        const processSubtitle = async (track: Track) => {
+          try {
+            const subtitle = await downloadSubtitle(track.baseUrl, pot)
 
-        await copyAndNotify({
-          markdown,
-          wrapInTripleBackticks,
-          showSuccessToast,
-          showConfetti,
-          sendResponse,
-          successMessagePrefix: "Subtitle copied to clipboard",
-        })
+            if (!subtitle) {
+              throw new Error("Failed to download subtitle")
+            }
+
+            let markdown = await convertSrtToText(videoId, subtitle)
+            markdown = `# ${title}\n\n\n${markdown}`
+
+            await copyAndNotify({
+              markdown,
+              wrapInTripleBackticks,
+              showSuccessToast,
+              showConfetti,
+              sendResponse,
+              successMessagePrefix: "Subtitle copied to clipboard",
+            })
+          } catch (error) {
+             console.error("Error processing subtitle:", error)
+             showNotification("Failed to process subtitle", "error")
+          }
+        }
+
+        if (tracks.length === 1) {
+          await processSubtitle(tracks[0])
+        } else {
+          // Render selection UI
+          const root = getRoot()
+          const container = document.createElement("div")
+          // Ensure container is above everything
+          container.style.position = "absolute"
+          container.style.top = "0"
+          container.style.left = "0"
+          container.style.width = "100%"
+          container.style.height = "0" // Don't block interaction with rest of page unless necessary?
+          // Actually, the SubtitleSelector is fixed, so the container just needs to be in DOM
+
+          root.appendChild(container)
+          const reactRoot = createRoot(container)
+
+          const handleSelect = async (track: Track) => {
+            // Unmount first
+            reactRoot.unmount()
+            container.remove()
+
+            await processSubtitle(track)
+          }
+
+          const handleClose = () => {
+            reactRoot.unmount()
+            container.remove()
+          }
+
+          reactRoot.render(
+            <SubtitleSelector
+              tracks={tracks}
+              onSelect={handleSelect}
+              onClose={handleClose}
+            />
+          )
+        }
 
         return true
       }
