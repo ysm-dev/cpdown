@@ -155,7 +155,7 @@ export default defineContentScript({
       if (msg.type === "COPY_YOUTUBE_SUBTITLE") {
         const options = await getOptions()
 
-        const { showSuccessToast, showConfetti, wrapInTripleBackticks } =
+        const { showSuccessToast, showConfetti, wrapInTripleBackticks, youtubeSubtitleLanguage } =
           options
 
         const videoId = msg.payload
@@ -167,15 +167,17 @@ export default defineContentScript({
           document.querySelector("#title")?.textContent?.trim() ||
           "Untitle Video"
 
-        const subtitle = await getVideoSubtitle(videoId)
+        const subtitleResult = await getVideoSubtitle(videoId, youtubeSubtitleLanguage)
 
-        if (!subtitle) {
+        if (!subtitleResult.srt) {
           throw new Error("No subtitle found")
         }
 
-        let markdown = await convertSrtToText(videoId, subtitle)
+        let markdown = await convertSrtToText(videoId, subtitleResult.srt)
 
         markdown = `# ${title}\n\n\n${markdown}`
+        
+        const languageInfo = subtitleResult.languageName ? ` (${subtitleResult.languageName})` : ""
 
         await copyAndNotify({
           markdown,
@@ -183,7 +185,7 @@ export default defineContentScript({
           showSuccessToast,
           showConfetti,
           sendResponse,
-          successMessagePrefix: "Subtitle copied to clipboard",
+          successMessagePrefix: `Subtitle copied to clipboard${languageInfo}`,
         })
 
         return true

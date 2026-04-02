@@ -6,6 +6,7 @@ export type OptionsState = {
   wrapInTripleBackticks: boolean
   showSuccessToast: boolean
   showConfetti: boolean
+  youtubeSubtitleLanguage: string
 }
 
 export const defaultOptions: OptionsState = {
@@ -14,6 +15,7 @@ export const defaultOptions: OptionsState = {
   wrapInTripleBackticks: true,
   showSuccessToast: true,
   showConfetti: false,
+  youtubeSubtitleLanguage: "en",
 }
 
 export async function getOptions(): Promise<OptionsState> {

@@ -98,6 +98,31 @@ export const App = () => {
               }
               infoLink="https://x.com/raycastapp/status/1691464764516343808"
             />
+
+            <div className="border-border border-t"></div>
+
+            <div className="flex items-start justify-between px-2 py-3">
+              <div className="flex-1">
+                <h3 className="font-medium text-sm leading-none">
+                  YouTube Subtitle Language
+                </h3>
+                <p className="mt-1 text-muted-foreground text-xs">
+                  Preferred subtitle language code (ISO 639-1). Common codes: en (English), es (Spanish), fr (French), de (German), ja (Japanese), ko (Korean), ar (Arabic), zh (Chinese)
+                </p>
+                <input
+                  type="text"
+                  value={options.youtubeSubtitleLanguage}
+                  onChange={(e) => {
+                    const value = e.target.value.toLowerCase().trim()
+                    setOptions({ ...options, youtubeSubtitleLanguage: value })
+                    saveOptions({ youtubeSubtitleLanguage: value })
+                  }}
+                  className="mt-2 w-20 rounded border border-border bg-background px-2 py-1 text-sm focus:border-primary focus:outline-none"
+                  placeholder="en"
+                  maxLength={2}
+                />
+              </div>
+            </div>
           </>
         )}
       </div>

@@ -39,12 +39,27 @@ const getYtInitialPlayerResponse = (): Promise<any | null> => {
 }
 
 export const getVideoInfo = memoize(async (videoId: string) => {
+  // #region agent log
+  fetch('http://127.0.0.1:7246/ingest/24905037-5b6d-4676-b2b4-2bf91ff07501',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'getVideoInfo.ts:41',message:'getVideoInfo called',data:{videoId},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'H1'})}).catch(()=>{});
+  // #endregion
+  
   // First try to get from main world script
   const { ytInitialPlayerResponse, pot } = await getYtInitialPlayerResponse()
 
+  // #region agent log
+  fetch('http://127.0.0.1:7246/ingest/24905037-5b6d-4676-b2b4-2bf91ff07501',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'getVideoInfo.ts:48',message:'Main world response received',data:{hasPlayerResponse:!!ytInitialPlayerResponse,pot,responseType:typeof ytInitialPlayerResponse},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'H1,H3'})}).catch(()=>{});
+  // #endregion
+
   if (ytInitialPlayerResponse) {
+    // #region agent log
+    fetch('http://127.0.0.1:7246/ingest/24905037-5b6d-4676-b2b4-2bf91ff07501',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'getVideoInfo.ts:53',message:'Using main world data',data:{hasCaptions:!!ytInitialPlayerResponse?.captions,captionTracksLength:ytInitialPlayerResponse?.captions?.playerCaptionsTracklistRenderer?.captionTracks?.length},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'H1,H2'})}).catch(()=>{});
+    // #endregion
     return { r: ytInitialPlayerResponse, pot }
   }
+
+  // #region agent log
+  fetch('http://127.0.0.1:7246/ingest/24905037-5b6d-4676-b2b4-2bf91ff07501',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'getVideoInfo.ts:59',message:'Falling back to API',data:{},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'H1'})}).catch(()=>{});
+  // #endregion
 
   const r = await ofetch<Response>(
     `https://www.youtube.com/youtubei/v1/player`,
@@ -62,6 +77,10 @@ export const getVideoInfo = memoize(async (videoId: string) => {
       credentials: "omit",
     },
   )
+
+  // #region agent log
+  fetch('http://127.0.0.1:7246/ingest/24905037-5b6d-4676-b2b4-2bf91ff07501',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'getVideoInfo.ts:79',message:'API response received',data:{hasCaptions:!!r?.captions,captionTracksLength:r?.captions?.playerCaptionsTracklistRenderer?.captionTracks?.length,potFromFallback:pot},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'H2,H3'})}).catch(()=>{});
+  // #endregion
 
   return { r, pot }
 })
