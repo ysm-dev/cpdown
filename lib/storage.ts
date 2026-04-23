@@ -1,11 +1,14 @@
 import { browser } from "wxt/browser"
 
+export type ExportFormat = "markdown" | "txt"
+
 export type OptionsState = {
   useDeffudle: boolean
   useReadability: boolean
   wrapInTripleBackticks: boolean
   showSuccessToast: boolean
   showConfetti: boolean
+  exportFormat: ExportFormat
 }
 
 export const defaultOptions: OptionsState = {
@@ -14,6 +17,7 @@ export const defaultOptions: OptionsState = {
   wrapInTripleBackticks: true,
   showSuccessToast: true,
   showConfetti: false,
+  exportFormat: "markdown",
 }
 
 export async function getOptions(): Promise<OptionsState> {

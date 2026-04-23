@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { ToggleOption } from "@/components/ToggleOption"
-import { getOptions, type OptionsState, saveOptions } from "@/lib/storage"
+import { getOptions, type OptionsState, saveOptions, type ExportFormat } from "@/lib/storage"
 import packageJson from "../../package.json"
 
 export const App = () => {
@@ -17,15 +17,15 @@ export const App = () => {
 
   const handleOptionChange = async (
     key: keyof OptionsState,
-    value: boolean,
+    value: boolean | ExportFormat,
   ) => {
     if (!options) return
 
     let newOptions = { ...options, [key]: value }
 
-    if (key === "useReadability" && value) {
+    if (key === "useReadability" && value === true) {
       newOptions = { ...newOptions, useDeffudle: false }
-    } else if (key === "useDeffudle" && value) {
+    } else if (key === "useDeffudle" && value === true) {
       newOptions = { ...newOptions, useReadability: false }
     }
 
@@ -98,6 +98,39 @@ export const App = () => {
               }
               infoLink="https://x.com/raycastapp/status/1691464764516343808"
             />
+
+            <div className="border-border border-t"></div>
+
+            <div className="py-3">
+              <div className="space-y-2">
+                <h3 className="font-medium text-sm leading-none">Export Format</h3>
+                <p className="text-pretty text-muted-foreground text-xs">
+                  Choose the format for exporting content. Markdown preserves formatting, TXT is plain text.
+                </p>
+              </div>
+              <div className="mt-3 flex gap-2">
+                <button
+                  className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                    options.exportFormat === "markdown"
+                      ? "bg-primary text-primary-foreground"
+                      : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
+                  }`}
+                  onClick={() => handleOptionChange("exportFormat", "markdown")}
+                >
+                  Markdown
+                </button>
+                <button
+                  className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                    options.exportFormat === "txt"
+                      ? "bg-primary text-primary-foreground"
+                      : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
+                  }`}
+                  onClick={() => handleOptionChange("exportFormat", "txt")}
+                >
+                  TXT
+                </button>
+              </div>
+            </div>
           </>
         )}
       </div>

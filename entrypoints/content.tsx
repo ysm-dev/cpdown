@@ -6,7 +6,7 @@ import { createRoot } from "react-dom/client"
 import Turndown from "turndown"
 import { browser } from "wxt/browser"
 import { getRoot, Noti, showNotification } from "@/lib/showNotification"
-import { getOptions } from "@/lib/storage"
+import { getOptions, type ExportFormat } from "@/lib/storage"
 import { defaultTagsToRemove } from "@/lib/tagsToRemove"
 import { convertSrtToText } from "@/lib/yt/convertSrtToText"
 import { getVideoInfo } from "@/lib/yt/getVideoInfo"
@@ -14,32 +14,36 @@ import { getVideoSubtitle } from "@/lib/yt/getVideoSubtitle"
 
 const tiktoken = new Tiktoken(o200k_base)
 
-// Utility to copy markdown to clipboard, respond to sender and optionally show toast/confetti
+// Utility to copy content to clipboard, respond to sender and optionally show toast/confetti
 const copyAndNotify = async ({
-  markdown,
+  content,
+  exportFormat,
   wrapInTripleBackticks,
   showSuccessToast,
   showConfetti,
   sendResponse,
   successMessagePrefix,
 }: {
-  markdown: string
+  content: string
+  exportFormat: ExportFormat
   wrapInTripleBackticks: boolean
   showSuccessToast: boolean
   showConfetti: boolean
   sendResponse: (response: { success: boolean }) => void
   successMessagePrefix: string
 }) => {
-  if (wrapInTripleBackticks) {
-    markdown = `\`\`\`md\n${markdown}\n\`\`\``
+  let finalContent = content
+
+  if (exportFormat === "markdown" && wrapInTripleBackticks) {
+    finalContent = `\`\`\`md\n${finalContent}\n\`\`\``
   }
 
   try {
-    await navigator.clipboard.writeText(markdown)
+    await navigator.clipboard.writeText(finalContent)
   } catch (error) {
     // Fallback for when document is not focused (e.g., DevTools is open)
     const textarea = document.createElement("textarea")
-    textarea.value = markdown
+    textarea.value = finalContent
     textarea.style.position = "fixed"
     textarea.style.opacity = "0"
     document.body.appendChild(textarea)
@@ -50,7 +54,7 @@ const copyAndNotify = async ({
 
   sendResponse({ success: true })
 
-  const tokens = tiktoken.encode(markdown)
+  const tokens = tiktoken.encode(finalContent)
 
   if (showSuccessToast) {
     showNotification(`${successMessagePrefix} (${tokens.length} tokens)`)
@@ -60,6 +64,54 @@ const copyAndNotify = async ({
     // Send a message to the background script to open the Raycast confetti URL
     browser.runtime.sendMessage({ type: "OPEN_CONFETTI" })
   }
+}
+
+// Function to convert markdown to plain text
+const markdownToTxt = (markdown: string): string => {
+  let txt = markdown
+
+  // Remove code blocks
+  txt = txt.replace(/```[\s\S]*?```/g, "")
+
+  // Remove inline code
+  txt = txt.replace(/`[^`]+`/g, "")
+
+  // Remove headers
+  txt = txt.replace(/^#{1,6}\s+/gm, "")
+
+  // Remove bold and italic
+  txt = txt.replace(/\*\*\*([^*]+)\*\*\*/g, "$1")
+  txt = txt.replace(/\*\*([^*]+)\*\*/g, "$1")
+  txt = txt.replace(/\*([^*]+)\*/g, "$1")
+  txt = txt.replace(/___([^_]+)___/g, "$1")
+  txt = txt.replace(/__([^_]+)__/g, "$1")
+  txt = txt.replace(/_([^_]+)_/g, "$1")
+
+  // Remove links but keep text
+  txt = txt.replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
+
+  // Remove images
+  txt = txt.replace(/!\[([^\]]*)\]\([^)]+\)/g, "")
+
+  // Remove blockquotes
+  txt = txt.replace(/^>\s+/gm, "")
+
+  // Remove horizontal rules
+  txt = txt.replace(/^-{3,}$/gm, "")
+  txt = txt.replace(/^\*{3,}$/gm, "")
+  txt = txt.replace(/^_{3,}$/gm, "")
+
+  // Remove list markers
+  txt = txt.replace(/^[-*+]\s+/gm, "")
+  txt = txt.replace(/^\d+\.\s+/gm, "")
+
+  // Remove extra newlines (more than 2)
+  txt = txt.replace(/\n{3,}/g, "\n\n")
+
+  // Trim whitespace
+  txt = txt.trim()
+
+  return txt
 }
 
 export default defineContentScript({
@@ -89,6 +141,7 @@ export default defineContentScript({
           showConfetti,
           useDeffudle,
           wrapInTripleBackticks,
+          exportFormat,
         } = options
 
         const html = msg.payload
@@ -140,13 +193,22 @@ export default defineContentScript({
             .turndown(html)
         }
 
+        let finalContent = markdown
+        let successMessagePrefix = "Copied as markdown"
+
+        if (exportFormat === "txt") {
+          finalContent = markdownToTxt(markdown)
+          successMessagePrefix = "Copied as text"
+        }
+
         await copyAndNotify({
-          markdown,
+          content: finalContent,
+          exportFormat,
           wrapInTripleBackticks,
           showSuccessToast,
           showConfetti,
           sendResponse,
-          successMessagePrefix: "Copied as markdown",
+          successMessagePrefix,
         })
 
         return true
@@ -155,7 +217,7 @@ export default defineContentScript({
       if (msg.type === "COPY_YOUTUBE_SUBTITLE") {
         const options = await getOptions()
 
-        const { showSuccessToast, showConfetti, wrapInTripleBackticks } =
+        const { showSuccessToast, showConfetti, wrapInTripleBackticks, exportFormat } =
           options
 
         const videoId = msg.payload
@@ -177,13 +239,22 @@ export default defineContentScript({
 
         markdown = `# ${title}\n\n\n${markdown}`
 
+        let finalContent = markdown
+        let successMessagePrefix = "Subtitle copied as markdown"
+
+        if (exportFormat === "txt") {
+          finalContent = markdownToTxt(markdown)
+          successMessagePrefix = "Subtitle copied as text"
+        }
+
         await copyAndNotify({
-          markdown,
+          content: finalContent,
+          exportFormat,
           wrapInTripleBackticks,
           showSuccessToast,
           showConfetti,
           sendResponse,
-          successMessagePrefix: "Subtitle copied to clipboard",
+          successMessagePrefix,
         })
 
         return true
