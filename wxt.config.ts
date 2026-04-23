@@ -18,7 +18,7 @@ export default defineConfig({
         description: "Copy current page as clean markdown",
       },
     },
-    permissions: ["activeTab", "clipboardWrite", "scripting", "storage"],
+    permissions: ["activeTab", "clipboardWrite", "scripting", "storage", "sidePanel"],
     host_permissions: ["<all_urls>"],
     web_accessible_resources: [
       {
@@ -26,6 +26,9 @@ export default defineConfig({
         matches: ["*://*.youtube.com/*"],
       },
     ],
+    side_panel: {
+      default_path: "sidebar.html",
+    },
   },
   vite: () => ({
     plugins: [

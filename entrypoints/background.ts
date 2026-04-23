@@ -39,8 +39,15 @@ function isInjectableUrl(url?: string): boolean {
 }
 
 export default defineBackground(() => {
-  browser.action.onClicked.addListener(() => {
-    copyCurrentPageAsMarkdown()
+  browser.action.onClicked.addListener(async (tab) => {
+    if (tab.id) {
+      try {
+        await browser.sidePanel.open({ tabId: tab.id })
+      } catch (error) {
+        console.error("Failed to open side panel:", error)
+        copyCurrentPageAsMarkdown()
+      }
+    }
   })
 
   browser.commands.onCommand.addListener((command) => {
