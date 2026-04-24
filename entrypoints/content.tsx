@@ -14,6 +14,43 @@ import { getVideoSubtitle } from "@/lib/yt/getVideoSubtitle"
 
 const tiktoken = new Tiktoken(o200k_base)
 
+function removeRedundantNewlinesFromText(text: string): string {
+  let result = text
+
+  result = result.replace(/\r\n/g, "\n")
+
+  result = result.replace(/^[ \t]+$/gm, "")
+
+  result = result.replace(/\n{3,}/g, "\n\n")
+
+  return result
+}
+
+function buildSourceMetadata(
+  pageTitle: string,
+  pageUrl: string,
+): { title: string; url: string; copyTime: string } {
+  return {
+    title: pageTitle,
+    url: pageUrl,
+    copyTime: new Date().toLocaleString("zh-CN", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+    }),
+  }
+}
+
+function formatSourceInfo(metadata: {
+  title: string
+  url: string
+  copyTime: string
+}): string {
+  return `\n\n---\n\n**来源信息**\n- 标题：${metadata.title}\n- 链接：${metadata.url}\n- 复制时间：${metadata.copyTime}`
+}
+
 // Utility to copy markdown to clipboard, respond to sender and optionally show toast/confetti
 const copyAndNotify = async ({
   markdown,
@@ -22,6 +59,7 @@ const copyAndNotify = async ({
   showConfetti,
   sendResponse,
   successMessagePrefix,
+  sourceMetadata,
 }: {
   markdown: string
   wrapInTripleBackticks: boolean
@@ -29,17 +67,28 @@ const copyAndNotify = async ({
   showConfetti: boolean
   sendResponse: (response: { success: boolean }) => void
   successMessagePrefix: string
+  sourceMetadata?: {
+    title: string
+    url: string
+    copyTime: string
+  }
 }) => {
+  let finalContent = markdown
+
   if (wrapInTripleBackticks) {
-    markdown = `\`\`\`md\n${markdown}\n\`\`\``
+    finalContent = `\`\`\`md\n${finalContent}\n\`\`\``
+  }
+
+  if (sourceMetadata) {
+    finalContent = finalContent + formatSourceInfo(sourceMetadata)
   }
 
   try {
-    await navigator.clipboard.writeText(markdown)
+    await navigator.clipboard.writeText(finalContent)
   } catch (error) {
     // Fallback for when document is not focused (e.g., DevTools is open)
     const textarea = document.createElement("textarea")
-    textarea.value = markdown
+    textarea.value = finalContent
     textarea.style.position = "fixed"
     textarea.style.opacity = "0"
     document.body.appendChild(textarea)
@@ -50,7 +99,7 @@ const copyAndNotify = async ({
 
   sendResponse({ success: true })
 
-  const tokens = tiktoken.encode(markdown)
+  const tokens = tiktoken.encode(finalContent)
 
   if (showSuccessToast) {
     showNotification(`${successMessagePrefix} (${tokens.length} tokens)`)
@@ -143,22 +192,15 @@ export default defineContentScript({
         }
 
         if (removeRedundantNewlines) {
-          markdown = markdown.replace(/\n{3,}/g, "\n\n")
+          markdown = removeRedundantNewlinesFromText(markdown)
         }
 
-        if (enableSourceTracking) {
-          const pageTitle = document.title || "Untitled Page"
-          const pageUrl = window.location.href
-          const copyTime = new Date().toLocaleString("zh-CN", {
-            year: "numeric",
-            month: "2-digit",
-            day: "2-digit",
-            hour: "2-digit",
-            minute: "2-digit",
-          })
-
-          markdown = `${markdown}\n\n---\n\n**来源信息**\n- 标题：${pageTitle}\n- 链接：${pageUrl}\n- 复制时间：${copyTime}`
-        }
+        const sourceMetadata = enableSourceTracking
+          ? buildSourceMetadata(
+              document.title || "Untitled Page",
+              window.location.href,
+            )
+          : undefined
 
         await copyAndNotify({
           markdown,
@@ -167,6 +209,7 @@ export default defineContentScript({
           showConfetti,
           sendResponse,
           successMessagePrefix: "Copied as markdown",
+          sourceMetadata,
         })
 
         return true
@@ -203,22 +246,15 @@ export default defineContentScript({
         markdown = `# ${title}\n\n\n${markdown}`
 
         if (removeRedundantNewlines) {
-          markdown = markdown.replace(/\n{3,}/g, "\n\n")
+          markdown = removeRedundantNewlinesFromText(markdown)
         }
 
-        if (enableSourceTracking) {
-          const pageTitle = document.title || title
-          const pageUrl = window.location.href
-          const copyTime = new Date().toLocaleString("zh-CN", {
-            year: "numeric",
-            month: "2-digit",
-            day: "2-digit",
-            hour: "2-digit",
-            minute: "2-digit",
-          })
-
-          markdown = `${markdown}\n\n---\n\n**来源信息**\n- 标题：${pageTitle}\n- 链接：${pageUrl}\n- 复制时间：${copyTime}`
-        }
+        const sourceMetadata = enableSourceTracking
+          ? buildSourceMetadata(
+              document.title || title,
+              window.location.href,
+            )
+          : undefined
 
         await copyAndNotify({
           markdown,
@@ -227,6 +263,7 @@ export default defineContentScript({
           showConfetti,
           sendResponse,
           successMessagePrefix: "Subtitle copied to clipboard",
+          sourceMetadata,
         })
 
         return true
