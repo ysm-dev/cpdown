@@ -98,6 +98,28 @@ export const App = () => {
               }
               infoLink="https://x.com/raycastapp/status/1691464764516343808"
             />
+
+            <div className="border-border border-t"></div>
+
+            <ToggleOption
+              title="排版优化 - 去除冗余换行"
+              description="开启后自动清理复制内容中多余的空行，让文本阅读更整洁流畅"
+              checked={options.removeRedundantNewlines}
+              onCheckedChange={(checked) =>
+                handleOptionChange("removeRedundantNewlines", checked)
+              }
+            />
+
+            <div className="border-border border-t"></div>
+
+            <ToggleOption
+              title="资料溯源增强"
+              description="开启后复制正文时，自动拼接附带网页标题、原始来源链接、实时复制时间信息，统一排版展示"
+              checked={options.enableSourceTracking}
+              onCheckedChange={(checked) =>
+                handleOptionChange("enableSourceTracking", checked)
+              }
+            />
           </>
         )}
       </div>

@@ -6,6 +6,8 @@ export type OptionsState = {
   wrapInTripleBackticks: boolean
   showSuccessToast: boolean
   showConfetti: boolean
+  removeRedundantNewlines: boolean
+  enableSourceTracking: boolean
 }
 
 export const defaultOptions: OptionsState = {
@@ -14,6 +16,8 @@ export const defaultOptions: OptionsState = {
   wrapInTripleBackticks: true,
   showSuccessToast: true,
   showConfetti: false,
+  removeRedundantNewlines: false,
+  enableSourceTracking: false,
 }
 
 export async function getOptions(): Promise<OptionsState> {

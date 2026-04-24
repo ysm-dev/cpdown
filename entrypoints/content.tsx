@@ -89,6 +89,8 @@ export default defineContentScript({
           showConfetti,
           useDeffudle,
           wrapInTripleBackticks,
+          removeRedundantNewlines,
+          enableSourceTracking,
         } = options
 
         const html = msg.payload
@@ -140,6 +142,24 @@ export default defineContentScript({
             .turndown(html)
         }
 
+        if (removeRedundantNewlines) {
+          markdown = markdown.replace(/\n{3,}/g, "\n\n")
+        }
+
+        if (enableSourceTracking) {
+          const pageTitle = document.title || "Untitled Page"
+          const pageUrl = window.location.href
+          const copyTime = new Date().toLocaleString("zh-CN", {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+            hour: "2-digit",
+            minute: "2-digit",
+          })
+
+          markdown = `${markdown}\n\n---\n\n**来源信息**\n- 标题：${pageTitle}\n- 链接：${pageUrl}\n- 复制时间：${copyTime}`
+        }
+
         await copyAndNotify({
           markdown,
           wrapInTripleBackticks,
@@ -155,8 +175,13 @@ export default defineContentScript({
       if (msg.type === "COPY_YOUTUBE_SUBTITLE") {
         const options = await getOptions()
 
-        const { showSuccessToast, showConfetti, wrapInTripleBackticks } =
-          options
+        const {
+          showSuccessToast,
+          showConfetti,
+          wrapInTripleBackticks,
+          removeRedundantNewlines,
+          enableSourceTracking,
+        } = options
 
         const videoId = msg.payload
 
@@ -176,6 +201,24 @@ export default defineContentScript({
         let markdown = await convertSrtToText(videoId, subtitle)
 
         markdown = `# ${title}\n\n\n${markdown}`
+
+        if (removeRedundantNewlines) {
+          markdown = markdown.replace(/\n{3,}/g, "\n\n")
+        }
+
+        if (enableSourceTracking) {
+          const pageTitle = document.title || title
+          const pageUrl = window.location.href
+          const copyTime = new Date().toLocaleString("zh-CN", {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+            hour: "2-digit",
+            minute: "2-digit",
+          })
+
+          markdown = `${markdown}\n\n---\n\n**来源信息**\n- 标题：${pageTitle}\n- 链接：${pageUrl}\n- 复制时间：${copyTime}`
+        }
 
         await copyAndNotify({
           markdown,
