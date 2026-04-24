@@ -15,16 +15,34 @@ import { getVideoSubtitle } from "@/lib/yt/getVideoSubtitle"
 const tiktoken = new Tiktoken(o200k_base)
 
 function removeRedundantNewlinesFromText(text: string): string {
+  if (!text || typeof text !== "string") {
+    return text
+  }
+
   let result = text
 
   result = result.replace(/\r\n/g, "\n")
+  result = result.replace(/\r/g, "\n")
 
-  result = result.replace(/^[ \t]+$/gm, "")
+  result = result.replace(
+    /^[ \t\f\v\u00a0\u2000-\u200a\u202f\u205f\u3000]+$/gm,
+    "",
+  )
 
-  result = result.replace(/\n{3,}/g, "\n\n")
+  let previousLength
+  do {
+    previousLength = result.length
+    result = result.replace(/\n[ \t\f\v\u00a0\u2000-\u200a\u202f\u205f\u3000]*\n/g, "\n\n")
+    result = result.replace(/\n{3,}/g, "\n\n")
+  } while (result.length !== previousLength)
+
+  result = result.replace(/^\n+/, "")
+  result = result.replace(/\n+$/, "")
 
   return result
 }
+
+const SOURCE_INFO_MARKER = "<!-- cpdown-source-info -->"
 
 function buildSourceMetadata(
   pageTitle: string,
@@ -43,12 +61,16 @@ function buildSourceMetadata(
   }
 }
 
+function hasSourceInfo(text: string): boolean {
+  return text.includes(SOURCE_INFO_MARKER) || text.includes("**来源信息**")
+}
+
 function formatSourceInfo(metadata: {
   title: string
   url: string
   copyTime: string
 }): string {
-  return `\n\n---\n\n**来源信息**\n- 标题：${metadata.title}\n- 链接：${metadata.url}\n- 复制时间：${metadata.copyTime}`
+  return `\n\n---\n\n${SOURCE_INFO_MARKER}\n\n**来源信息**\n\n- 📄 标题：${metadata.title}\n- 🔗 链接：${metadata.url}\n- ⏰ 复制时间：${metadata.copyTime}`
 }
 
 // Utility to copy markdown to clipboard, respond to sender and optionally show toast/confetti
@@ -79,7 +101,7 @@ const copyAndNotify = async ({
     finalContent = `\`\`\`md\n${finalContent}\n\`\`\``
   }
 
-  if (sourceMetadata) {
+  if (sourceMetadata && !hasSourceInfo(finalContent)) {
     finalContent = finalContent + formatSourceInfo(sourceMetadata)
   }
 

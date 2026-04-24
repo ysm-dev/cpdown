@@ -132,13 +132,10 @@ export default defineBackground(() => {
       // The result is an array of execution results
       if (results && results.length > 0 && results[0].result) {
         const bodyContent = results[0].result
-        console.log("Body content:", bodyContent)
 
-        browser.tabs.query({ active: true, currentWindow: true }, () => {
-          browser.tabs.sendMessage(activeTab.id!, {
-            type: "COPY_TEXT",
-            payload: bodyContent,
-          })
+        browser.tabs.sendMessage(activeTab.id!, {
+          type: "COPY_TEXT",
+          payload: bodyContent,
         })
       }
     } catch (error) {
