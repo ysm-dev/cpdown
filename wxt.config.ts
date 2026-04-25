@@ -22,6 +22,7 @@ export default defineConfig({
           default: "Ctrl+Shift+Y",
           mac: "Ctrl+Shift+Y",
         },
+        description: "Open cpdown sidebar panel",
       },
     },
     permissions: [
