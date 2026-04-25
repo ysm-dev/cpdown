@@ -6,7 +6,8 @@ import { createRoot } from "react-dom/client"
 import Turndown from "turndown"
 import { browser } from "wxt/browser"
 import { getRoot, Noti, showNotification } from "@/lib/showNotification"
-import { getOptions } from "@/lib/storage"
+import { getOptions, addToHistory } from "@/lib/storage"
+import { translateText, translateMarkdown } from "@/lib/translate"
 import { defaultTagsToRemove } from "@/lib/tagsToRemove"
 import { convertSrtToText } from "@/lib/yt/convertSrtToText"
 import { getVideoInfo } from "@/lib/yt/getVideoInfo"
@@ -14,7 +15,8 @@ import { getVideoSubtitle } from "@/lib/yt/getVideoSubtitle"
 
 const tiktoken = new Tiktoken(o200k_base)
 
-// Utility to copy markdown to clipboard, respond to sender and optionally show toast/confetti
+type ContentType = "webpage" | "subtitle" | "selection"
+
 const copyAndNotify = async ({
   markdown,
   wrapInTripleBackticks,
@@ -22,6 +24,9 @@ const copyAndNotify = async ({
   showConfetti,
   sendResponse,
   successMessagePrefix,
+  contentType,
+  title,
+  url,
 }: {
   markdown: string
   wrapInTripleBackticks: boolean
@@ -29,17 +34,19 @@ const copyAndNotify = async ({
   showConfetti: boolean
   sendResponse: (response: { success: boolean }) => void
   successMessagePrefix: string
+  contentType: ContentType
+  title?: string
+  url?: string
 }) => {
-  if (wrapInTripleBackticks) {
-    markdown = `\`\`\`md\n${markdown}\n\`\`\``
-  }
+  const finalMarkdown = wrapInTripleBackticks
+    ? `\`\`\`md\n${markdown}\n\`\`\``
+    : markdown
 
   try {
-    await navigator.clipboard.writeText(markdown)
+    await navigator.clipboard.writeText(finalMarkdown)
   } catch (error) {
-    // Fallback for when document is not focused (e.g., DevTools is open)
     const textarea = document.createElement("textarea")
-    textarea.value = markdown
+    textarea.value = finalMarkdown
     textarea.style.position = "fixed"
     textarea.style.opacity = "0"
     document.body.appendChild(textarea)
@@ -48,16 +55,28 @@ const copyAndNotify = async ({
     document.body.removeChild(textarea)
   }
 
+  const tokens = tiktoken.encode(finalMarkdown)
+  const tokenCount = tokens.length
+
+  try {
+    await addToHistory({
+      content: finalMarkdown,
+      title: title || document.title || "Untitled",
+      url: url || window.location.href,
+      type: contentType,
+      tokenCount,
+    })
+  } catch (error) {
+    console.error("Failed to add to history:", error)
+  }
+
   sendResponse({ success: true })
 
-  const tokens = tiktoken.encode(markdown)
-
   if (showSuccessToast) {
-    showNotification(`${successMessagePrefix} (${tokens.length} tokens)`)
+    showNotification(`${successMessagePrefix} (${tokenCount} tokens)`)
   }
 
   if (showConfetti) {
-    // Send a message to the background script to open the Raycast confetti URL
     browser.runtime.sendMessage({ type: "OPEN_CONFETTI" })
   }
 }
@@ -147,6 +166,9 @@ export default defineContentScript({
           showConfetti,
           sendResponse,
           successMessagePrefix: "Copied as markdown",
+          contentType: "webpage",
+          title: document.title,
+          url: window.location.href,
         })
 
         return true
@@ -184,8 +206,41 @@ export default defineContentScript({
           showConfetti,
           sendResponse,
           successMessagePrefix: "Subtitle copied to clipboard",
+          contentType: "subtitle",
+          title,
+          url: window.location.href,
         })
 
+        return true
+      }
+
+      if (msg.type === "TRANSLATE_TEXT") {
+        try {
+          const { text, targetLanguage } = msg.payload
+          const result = await translateText(text, targetLanguage)
+          sendResponse(result)
+        } catch (error) {
+          console.error("Translation error:", error)
+          sendResponse({
+            success: false,
+            error: error instanceof Error ? error.message : "Translation failed",
+          })
+        }
+        return true
+      }
+
+      if (msg.type === "TRANSLATE_MARKDOWN") {
+        try {
+          const { markdown, targetLanguage } = msg.payload
+          const result = await translateMarkdown(markdown, targetLanguage)
+          sendResponse(result)
+        } catch (error) {
+          console.error("Markdown translation error:", error)
+          sendResponse({
+            success: false,
+            error: error instanceof Error ? error.message : "Translation failed",
+          })
+        }
         return true
       }
     })
