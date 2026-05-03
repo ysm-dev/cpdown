@@ -66,6 +66,17 @@ export const App = () => {
 
             <div className="border-border border-t"></div>
 
+            <ToggleOption
+              title="Prepend page URL"
+              description="Add the current page URL as a markdown link at the very top of the copied output"
+              checked={options.prependPageUrl}
+              onCheckedChange={(checked) =>
+                handleOptionChange("prependPageUrl", checked)
+              }
+            />
+
+            <div className="border-border border-t"></div>
+
             {/* wrap in triple backticks */}
             <ToggleOption
               title="Wrap in triple backticks"

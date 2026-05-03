@@ -22,6 +22,7 @@ const copyAndNotify = async ({
   showConfetti,
   sendResponse,
   successMessagePrefix,
+  pageUrl,
 }: {
   markdown: string
   wrapInTripleBackticks: boolean
@@ -29,9 +30,14 @@ const copyAndNotify = async ({
   showConfetti: boolean
   sendResponse: (response: { success: boolean }) => void
   successMessagePrefix: string
+  pageUrl?: string
 }) => {
   if (wrapInTripleBackticks) {
     markdown = `\`\`\`md\n${markdown}\n\`\`\``
+  }
+
+  if (pageUrl) {
+    markdown = `[${pageUrl}](${pageUrl})\n\n${markdown}`
   }
 
   try {
@@ -89,6 +95,7 @@ export default defineContentScript({
           showConfetti,
           useDeffudle,
           wrapInTripleBackticks,
+          prependPageUrl,
         } = options
 
         const html = msg.payload
@@ -147,6 +154,7 @@ export default defineContentScript({
           showConfetti,
           sendResponse,
           successMessagePrefix: "Copied as markdown",
+          pageUrl: prependPageUrl ? window.location.href : undefined,
         })
 
         return true
@@ -155,8 +163,12 @@ export default defineContentScript({
       if (msg.type === "COPY_YOUTUBE_SUBTITLE") {
         const options = await getOptions()
 
-        const { showSuccessToast, showConfetti, wrapInTripleBackticks } =
-          options
+        const {
+          showSuccessToast,
+          showConfetti,
+          wrapInTripleBackticks,
+          prependPageUrl,
+        } = options
 
         const videoId = msg.payload
 
@@ -184,6 +196,7 @@ export default defineContentScript({
           showConfetti,
           sendResponse,
           successMessagePrefix: "Subtitle copied to clipboard",
+          pageUrl: prependPageUrl ? window.location.href : undefined,
         })
 
         return true

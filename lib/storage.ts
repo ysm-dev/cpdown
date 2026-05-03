@@ -3,6 +3,7 @@ import { browser } from "wxt/browser"
 export type OptionsState = {
   useDeffudle: boolean
   useReadability: boolean
+  prependPageUrl: boolean
   wrapInTripleBackticks: boolean
   showSuccessToast: boolean
   showConfetti: boolean
@@ -11,6 +12,7 @@ export type OptionsState = {
 export const defaultOptions: OptionsState = {
   useDeffudle: true,
   useReadability: false,
+  prependPageUrl: false,
   wrapInTripleBackticks: true,
   showSuccessToast: true,
   showConfetti: false,
