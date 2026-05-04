@@ -3,9 +3,10 @@ import Defuddle from "defuddle"
 import { Tiktoken } from "js-tiktoken/lite"
 import o200k_base from "js-tiktoken/ranks/o200k_base"
 import { createRoot } from "react-dom/client"
+import "sonner/dist/styles.css"
 import Turndown from "turndown"
 import { browser } from "wxt/browser"
-import { getRoot, Noti, showNotification } from "@/lib/showNotification"
+import { Noti, showNotification } from "@/lib/showNotification"
 import { getOptions } from "@/lib/storage"
 import { defaultTagsToRemove } from "@/lib/tagsToRemove"
 import { convertSrtToText } from "@/lib/yt/convertSrtToText"
@@ -70,8 +71,24 @@ const copyAndNotify = async ({
 
 export default defineContentScript({
   matches: ["*://*/*"],
-  async main() {
-    createRoot(getRoot()).render(<Noti />)
+  cssInjectionMode: "ui",
+  async main(ctx) {
+    // Mount the toast UI inside an isolated Shadow DOM so the host page's CSS
+    // cannot leak in (and our styles cannot leak out).
+    const ui = await createShadowRootUi(ctx, {
+      name: "cpdown-notification",
+      position: "inline",
+      anchor: "body",
+      onMount: (container) => {
+        const wrapper = document.createElement("div")
+        container.append(wrapper)
+        const root = createRoot(wrapper)
+        root.render(<Noti />)
+        return root
+      },
+      onRemove: (root) => root?.unmount(),
+    })
+    ui.mount()
 
     // Inject main world script for YouTube pages
     if (window.location.hostname.includes("youtube.com")) {
@@ -104,7 +121,7 @@ export default defineContentScript({
 
         if (useReadability) {
           const doc = new DOMParser().parseFromString(html, "text/html")
-          doc.getElementById("cpdown-notification")?.remove()
+          doc.querySelector("cpdown-notification")?.remove()
 
           const article = new Readability(doc).parse()
 
@@ -118,7 +135,7 @@ export default defineContentScript({
         } else if (useDeffudle) {
           try {
             const doc = new DOMParser().parseFromString(html, "text/html")
-            doc.getElementById("cpdown-notification")?.remove()
+            doc.querySelector("cpdown-notification")?.remove()
             const defuddle = new Defuddle(doc, {
               debug: true,
               markdown: true,
