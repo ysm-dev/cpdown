@@ -71,6 +71,47 @@ export default defineUnlistedScript(() => {
         "*",
       )
     }
+
+    if (event.data.type === "GET_YT_CAPTIONS_SELECTION") {
+      // Read the currently displayed caption track from the YouTube player.
+      // Returns `{}` when captions are off; we normalize that to `null`.
+      let selected: {
+        vssId?: string
+        languageCode?: string
+        kind?: string
+        baseUrl?: string
+      } | null = null
+
+      try {
+        const player = document.getElementById("movie_player") as any
+        if (player && typeof player.getOption === "function") {
+          const track = player.getOption("captions", "track")
+          if (
+            track &&
+            typeof track === "object" &&
+            Object.keys(track).length > 0
+          ) {
+            selected = {
+              vssId: track.vssId,
+              languageCode: track.languageCode,
+              kind: track.kind,
+              baseUrl: track.baseUrl,
+            }
+          }
+        }
+      } catch (error) {
+        console.error("Error reading selected caption track:", error)
+      }
+
+      window.postMessage(
+        {
+          type: "YT_CAPTIONS_SELECTION",
+          data: selected,
+          requestId: event.data.requestId,
+        },
+        "*",
+      )
+    }
   })
 
   console.log("YouTube main world script loaded")
