@@ -89,7 +89,7 @@ bun run dev
 
 ## Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=ysm-dev/cpdown&type=Date)](https://www.star-history.com/#ysm-dev/cpdown&Date)
+[![Star History Chart](https://star-history.dera.page/svg?repos=ysm-dev/cpdown&type=Date)](https://star-history.dera.page/#ysm-dev/cpdown&Date)
 
 ## License
 
